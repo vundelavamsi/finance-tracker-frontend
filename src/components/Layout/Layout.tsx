@@ -1,13 +1,9 @@
 import { Box } from '@mui/material'
+import { Outlet } from 'react-router-dom'
 import Header from './Header'
 import Sidebar from './Sidebar'
-import { ReactNode } from 'react'
 
-interface LayoutProps {
-  children: ReactNode
-}
-
-export default function Layout({ children }: LayoutProps) {
+export default function Layout() {
   return (
     <Box sx={{ display: 'flex' }}>
       <Header />
@@ -21,7 +17,7 @@ export default function Layout({ children }: LayoutProps) {
           width: 'calc(100% - 240px)',
         }}
       >
-        {children}
+        <Outlet />
       </Box>
     </Box>
   )

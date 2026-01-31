@@ -1,23 +1,47 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
 import Layout from './components/Layout/Layout'
+import ProtectedRoute from './components/ProtectedRoute'
 import Dashboard from './pages/Dashboard'
 import Transactions from './pages/Transactions'
 import Accounts from './pages/Accounts'
 import Settings from './pages/Settings'
 import UserProfile from './pages/UserProfile'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import VerifyAuth from './pages/VerifyAuth'
+
+function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth()
+  if (loading) return null
+  if (user) return <Navigate to="/" replace />
+  return <>{children}</>
+}
 
 function App() {
   return (
     <BrowserRouter>
-      <Layout>
+      <AuthProvider>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/transactions" element={<Transactions />} />
-          <Route path="/accounts" element={<Accounts />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
+          <Route path="/register" element={<PublicOnlyRoute><Register /></PublicOnlyRoute>} />
+          <Route path="/auth/verify" element={<VerifyAuth />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Dashboard />} />
+            <Route path="transactions" element={<Transactions />} />
+            <Route path="accounts" element={<Accounts />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="profile" element={<UserProfile />} />
+          </Route>
         </Routes>
-      </Layout>
+      </AuthProvider>
     </BrowserRouter>
   )
 }
