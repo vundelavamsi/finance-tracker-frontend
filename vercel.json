@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://finance-tracker-backend-2n5w.onrender.com/api/:path*"
+    }
+  ]
+}
