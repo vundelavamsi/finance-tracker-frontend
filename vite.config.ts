@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         // target: 'http://localhost:8000',
-        target: 'https://finance-tracker-backend-2n5w.onrender.com',
+        target: 'https://finance-tracker-backend-2n5w.onrender.com/api',
         changeOrigin: true,
       },
     },
