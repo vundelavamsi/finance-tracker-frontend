@@ -1,7 +1,12 @@
 import axios from 'axios'
 
+// In production (e.g. Vercel), set VITE_API_URL to your backend base + /api
+// e.g. https://finance-tracker-backend-2n5w.onrender.com/api
+// In dev, /api is proxied to the backend by Vite.
+const baseURL = import.meta.env.VITE_API_URL ?? '/api'
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
