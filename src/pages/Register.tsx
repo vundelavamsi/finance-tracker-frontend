@@ -31,7 +31,7 @@ export default function Register() {
   }
 
   if (user) {
-    navigate('/', { replace: true })
+    navigate('/app', { replace: true })
     return null
   }
 
@@ -59,7 +59,7 @@ export default function Register() {
         phone: pTrim || undefined,
         password,
       })
-      navigate('/', { replace: true })
+      navigate('/app', { replace: true })
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ?? 'Registration failed'
       setMessage({ type: 'error', text: typeof msg === 'string' ? msg : JSON.stringify(msg) })

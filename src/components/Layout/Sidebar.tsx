@@ -9,11 +9,11 @@ import PersonIcon from '@mui/icons-material/Person'
 const drawerWidth = 240
 
 const menuItems = [
-  { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-  { text: 'Transactions', icon: <ReceiptIcon />, path: '/transactions' },
-  { text: 'Bank Accounts', icon: <AccountBalanceIcon />, path: '/accounts' },
-  { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
-  { text: 'User Profile', icon: <PersonIcon />, path: '/profile' },
+  { text: 'Dashboard', icon: <DashboardIcon />, path: '/app' },
+  { text: 'Transactions', icon: <ReceiptIcon />, path: '/app/transactions' },
+  { text: 'Bank Accounts', icon: <AccountBalanceIcon />, path: '/app/accounts' },
+  { text: 'Settings', icon: <SettingsIcon />, path: '/app/settings' },
+  { text: 'User Profile', icon: <PersonIcon />, path: '/app/profile' },
 ]
 
 export default function Sidebar() {

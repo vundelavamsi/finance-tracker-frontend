@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import {
   Box,
   Card,
@@ -15,6 +15,8 @@ import { useAuth } from '../contexts/AuthContext'
 
 export default function Login() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = (location.state as { from?: { pathname?: string } })?.from?.pathname ?? '/app'
   const { user, loading, login, loginByTelegramUsername, verifyTelegramLogin } = useAuth()
   const [telegramUsername, setTelegramUsername] = useState('')
   const [telegramCode, setTelegramCode] = useState('')
@@ -34,7 +36,7 @@ export default function Login() {
   }
 
   if (user) {
-    navigate('/', { replace: true })
+    navigate(from, { replace: true })
     return null
   }
 
@@ -68,7 +70,7 @@ export default function Login() {
     setVerifyCodeLoading(true)
     try {
       await verifyTelegramLogin(telegramCode.trim())
-      navigate('/', { replace: true })
+      navigate(from, { replace: true })
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ?? 'Invalid or expired code'
       setMessage({ type: 'error', text: typeof msg === 'string' ? msg : JSON.stringify(msg) })
@@ -87,7 +89,7 @@ export default function Login() {
     setEmailLoginLoading(true)
     try {
       await login({ login: loginEmailOrPhone.trim(), password })
-      navigate('/', { replace: true })
+      navigate(from, { replace: true })
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ?? 'Invalid login or password'
       setMessage({ type: 'error', text: typeof msg === 'string' ? msg : JSON.stringify(msg) })

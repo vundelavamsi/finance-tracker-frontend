@@ -48,7 +48,7 @@ export default function VerifyAuth() {
   }
 
   if (status === 'success') {
-    window.location.href = '/'
+    window.location.href = '/app'
     return (
       <Box
         sx={{
@@ -62,7 +62,7 @@ export default function VerifyAuth() {
         }}
       >
         <Alert severity="success">Login successful. Redirecting...</Alert>
-        <Button component={Link} to="/" sx={{ mt: 2 }}>
+        <Button component={Link} to="/app" sx={{ mt: 2 }}>
           Go to dashboard
         </Button>
       </Box>
