@@ -14,7 +14,7 @@ export default function Layout() {
           flexGrow: 1,
           p: 3,
           marginTop: '64px',
-          width: 'calc(100% - 240px)',
+          width: 'calc(100% - 260px)',
         }}
       >
         <Outlet />
