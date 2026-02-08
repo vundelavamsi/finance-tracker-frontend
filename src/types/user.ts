@@ -6,6 +6,7 @@ export interface User {
   phone: string | null
   is_active: boolean
   has_password: boolean
+  expense_sub_category_enabled: boolean
   created_at: string
 }
 
@@ -13,6 +14,7 @@ export interface UserUpdate {
   email?: string
   phone?: string
   is_active?: boolean
+  expense_sub_category_enabled?: boolean
 }
 
 export interface AuthResponse {

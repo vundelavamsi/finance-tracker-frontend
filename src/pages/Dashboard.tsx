@@ -23,8 +23,8 @@ import CreditCardIcon from '@mui/icons-material/CreditCard'
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
 import AddIcon from '@mui/icons-material/Add'
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -286,7 +286,7 @@ export default function Dashboard() {
                 Income vs. Expenses (Last 6 Months)
               </Typography>
               <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={cashflowData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                <LineChart data={cashflowData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
                   <XAxis dataKey="month" tick={{ fill: TEXT_SECONDARY, fontSize: 12 }} />
                   <YAxis tick={{ fill: TEXT_SECONDARY, fontSize: 12 }} />
@@ -299,9 +299,23 @@ export default function Dashboard() {
                     formatter={(value: number) => [formatCurrency(value, 'INR'), '']}
                   />
                   <Legend />
-                  <Bar dataKey="Income" fill={INCOME_COLOR} name="Income" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="Expenses" fill={EXPENSE_COLOR} name="Expenses" radius={[4, 4, 0, 0]} />
-                </BarChart>
+                  <Line
+                    type="monotone"
+                    dataKey="Income"
+                    stroke={INCOME_COLOR}
+                    strokeWidth={2}
+                    dot={{ r: 4, strokeWidth: 2, fill: themeColors.CARD_BG }}
+                    name="Income"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="Expenses"
+                    stroke={EXPENSE_COLOR}
+                    strokeWidth={2}
+                    dot={{ r: 4, strokeWidth: 2, fill: themeColors.CARD_BG }}
+                    name="Expenses"
+                  />
+                </LineChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>

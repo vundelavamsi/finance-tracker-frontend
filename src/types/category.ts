@@ -1,3 +1,5 @@
+export type CategoryType = 'INCOME' | 'EXPENSE'
+
 export interface Category {
   id: number
   user_id: number
@@ -6,8 +8,12 @@ export interface Category {
   color: string
   icon: string | null
   is_active: boolean
+  category_type: CategoryType
+  parent_id: number | null
+  parent_name?: string | null
   created_at: string
   updated_at: string
+  sub_categories?: Category[] | null
 }
 
 export interface CategoryCreate {
@@ -16,6 +22,8 @@ export interface CategoryCreate {
   color?: string
   icon?: string
   is_active?: boolean
+  category_type?: CategoryType
+  parent_id?: number | null
 }
 
 export interface CategoryUpdate {
@@ -24,4 +32,6 @@ export interface CategoryUpdate {
   color?: string
   icon?: string
   is_active?: boolean
+  category_type?: CategoryType
+  parent_id?: number | null
 }

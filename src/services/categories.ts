@@ -1,8 +1,13 @@
 import api from './api'
-import { Category, CategoryCreate, CategoryUpdate } from '../types/category'
+import { Category, CategoryCreate, CategoryUpdate, CategoryType } from '../types/category'
 
-export const getCategories = async (): Promise<Category[]> => {
-  const response = await api.get('/categories')
+export interface GetCategoriesParams {
+  type?: CategoryType
+  include_children?: boolean
+}
+
+export const getCategories = async (params?: GetCategoriesParams): Promise<Category[]> => {
+  const response = await api.get('/categories', { params })
   return response.data
 }
 

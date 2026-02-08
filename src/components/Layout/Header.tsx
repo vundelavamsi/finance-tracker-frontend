@@ -78,14 +78,26 @@ export default function Header() {
         <Box sx={{ flexGrow: 1 }} />
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <IconButton size="medium" sx={{ color: '#B0B5BF' }} aria-label="notifications">
+          <IconButton
+            size="medium"
+            sx={{
+              color: '#B0B5BF',
+              borderRadius: '50%',
+              '&:hover': { backgroundColor: 'rgba(255,255,255,0.08)' },
+            }}
+            aria-label="notifications"
+          >
             <NotificationsNoneIcon />
           </IconButton>
           {user && (
             <IconButton
               onClick={handleMenuOpen}
               size="small"
-              sx={{ ml: 0.5 }}
+              sx={{
+                ml: 0.5,
+                borderRadius: 1,
+                '&:hover': { backgroundColor: 'rgba(255,255,255,0.08)' },
+              }}
               aria-controls={anchorEl ? 'user-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={anchorEl ? 'true' : undefined}
@@ -115,21 +127,6 @@ export default function Header() {
               </Box>
             </IconButton>
           )}
-          <Button
-            component={Link}
-            to="/app/transactions"
-            variant="contained"
-            startIcon={<AddIcon />}
-            sx={{
-              backgroundColor: ACCENT_BLUE,
-              color: '#fff',
-              borderRadius: 2,
-              px: 2,
-              '&:hover': { backgroundColor: '#2563EB' },
-            }}
-          >
-            Add Transaction
-          </Button>
         </Box>
       </Box>
 

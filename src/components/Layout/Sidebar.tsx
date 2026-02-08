@@ -83,20 +83,23 @@ export default function Sidebar() {
       }}
     >
       <Box sx={{ py: 2, px: 2, display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: 2, mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: 1, mb: 3 }}>
           <Box
             sx={{
-              width: 44,
-              height: 44,
-              borderRadius: 2,
+              width: 48,
+              minWidth: 48,
+              height: 48,
+              minHeight: 48,
+              borderRadius: 1,
               bgcolor: ACCENT_BLUE,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: 'white',
+              flexShrink: 0,
             }}
           >
-            <AccountBalanceWalletIcon sx={{ fontSize: 26 }} />
+            <AccountBalanceWalletIcon sx={{ fontSize: 24 }} />
           </Box>
           <Typography variant="h6" sx={{ fontWeight: 600, color: '#FFFFFF' }}>
             FinanceTracker
