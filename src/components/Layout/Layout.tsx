@@ -5,19 +5,27 @@ import Sidebar from './Sidebar'
 
 export default function Layout() {
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Header />
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
       <Sidebar />
       <Box
-        component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          marginTop: '64px',
-          width: 'calc(100% - 260px)',
+          display: 'flex',
+          flexDirection: 'column',
+          minWidth: 0,
+          backgroundColor: 'background.default',
         }}
       >
-        <Outlet />
+        <Header />
+        <Box
+          component="main"
+          sx={{
+            flex: 1,
+            p: 3,
+          }}
+        >
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   )

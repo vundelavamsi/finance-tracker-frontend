@@ -1,38 +1,28 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  AppBar,
-  Toolbar,
-  Typography,
   Box,
   IconButton,
   InputBase,
-  alpha,
   Menu,
   MenuItem,
   Avatar,
+  Button,
+  Typography,
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
-import SettingsIcon from '@mui/icons-material/Settings'
 import LogoutIcon from '@mui/icons-material/Logout'
+import AddIcon from '@mui/icons-material/Add'
 import { useAuth } from '../../contexts/AuthContext'
-import { useLocation } from 'react-router-dom'
 
-const pageTitles: Record<string, string> = {
-  '/app': 'Dashboard',
-  '/app/transactions': 'Transactions',
-  '/app/accounts': 'Bank Accounts',
-  '/app/settings': 'Settings',
-  '/app/profile': 'User Profile',
-}
+import { themeColors } from '../../theme'
+const { ACCENT_BLUE } = themeColors
+const SEARCH_BG = 'rgba(255,255,255,0.06)'
 
 export default function Header() {
   const { user, logout } = useAuth()
-  const location = useLocation()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-
-  const pageTitle = pageTitles[location.pathname] ?? 'Dashboard'
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -44,61 +34,52 @@ export default function Header() {
   }
 
   return (
-    <AppBar
-      position="fixed"
-      sx={{
-        zIndex: (theme) => theme.zIndex.drawer + 1,
-        backgroundColor: '#FFFFFF',
-        color: 'text.primary',
-        borderBottom: '1px solid rgba(0,0,0,0.06)',
-      }}
-    >
-      <Toolbar sx={{ gap: 2, minHeight: { xs: 56, sm: 64 } }}>
-        <Typography variant="h6" sx={{ fontWeight: 600, minWidth: 140 }}>
-          {pageTitle}
-        </Typography>
-
+    <>
+      <Box
+        component="header"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          px: 3,
+          py: 2,
+          minHeight: 72,
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          backgroundColor: '#2A2E3B',
+          flexShrink: 0,
+        }}
+      >
         <Box
           sx={{
             flex: 1,
-            maxWidth: 400,
-            display: { xs: 'none', md: 'block' },
-            position: 'relative',
+            maxWidth: 480,
+            display: { xs: 'none', md: 'flex' },
+            alignItems: 'center',
             borderRadius: 2,
-            backgroundColor: alpha('#000', 0.04),
-            '&:hover': { backgroundColor: alpha('#000', 0.06) },
+            backgroundColor: SEARCH_BG,
+            border: '1px solid rgba(255,255,255,0.08)',
+            px: 1.5,
+            height: 44,
           }}
         >
-          <Box
+          <SearchIcon sx={{ color: '#B0B5BF', mr: 1, fontSize: 20 }} />
+          <InputBase
+            placeholder="Search transactions, accounts or help..."
+            readOnly
             sx={{
-              padding: (t) => t.spacing(1, 1.5),
-              height: 40,
-              display: 'flex',
-              alignItems: 'center',
-              pointerEvents: 'none',
+              flex: 1,
+              fontSize: '0.875rem',
+              color: '#FFFFFF',
+              '& .MuiInputBase-input::placeholder': { color: '#B0B5BF', opacity: 1 },
             }}
-          >
-            <SearchIcon sx={{ color: 'text.secondary', mr: 1, fontSize: 20 }} />
-            <InputBase
-              placeholder="Search…"
-              readOnly
-              sx={{
-                width: '100%',
-                fontSize: '0.875rem',
-                '& .MuiInputBase-input': { py: 0 },
-              }}
-            />
-          </Box>
+          />
         </Box>
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <IconButton size="medium" sx={{ color: 'text.secondary' }} aria-label="notifications">
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <IconButton size="medium" sx={{ color: '#B0B5BF' }} aria-label="notifications">
             <NotificationsNoneIcon />
-          </IconButton>
-          <IconButton size="medium" sx={{ color: 'text.secondary' }} aria-label="settings">
-            <SettingsIcon />
           </IconButton>
           {user && (
             <IconButton
@@ -109,20 +90,48 @@ export default function Header() {
               aria-haspopup="true"
               aria-expanded={anchorEl ? 'true' : undefined}
             >
-              <Avatar
-                sx={{
-                  width: 36,
-                  height: 36,
-                  bgcolor: 'primary.main',
-                  fontSize: '0.875rem',
-                }}
-              >
-                {(user.telegram_username || user.email || user.phone || 'U').charAt(0).toUpperCase()}
-              </Avatar>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box sx={{ textAlign: 'right', display: { xs: 'none', sm: 'block' } }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ display: 'block', color: '#FFFFFF', fontWeight: 600, lineHeight: 1.2 }}
+                  >
+                    {user.telegram_username ? `@${user.telegram_username}` : user.email || user.phone || 'User'}
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#B0B5BF' }}>
+                    Pro Plan
+                  </Typography>
+                </Box>
+                <Avatar
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    bgcolor: ACCENT_BLUE,
+                    fontSize: '0.875rem',
+                  }}
+                >
+                  {(user.telegram_username || user.email || user.phone || 'U').charAt(0).toUpperCase()}
+                </Avatar>
+              </Box>
             </IconButton>
           )}
+          <Button
+            component={Link}
+            to="/app/transactions"
+            variant="contained"
+            startIcon={<AddIcon />}
+            sx={{
+              backgroundColor: ACCENT_BLUE,
+              color: '#fff',
+              borderRadius: 2,
+              px: 2,
+              '&:hover': { backgroundColor: '#2563EB' },
+            }}
+          >
+            Add Transaction
+          </Button>
         </Box>
-      </Toolbar>
+      </Box>
 
       <Menu
         id="user-menu"
@@ -132,24 +141,32 @@ export default function Header() {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         slotProps={{
-          paper: { sx: { mt: 1.5, minWidth: 200, borderRadius: 2 } },
+          paper: {
+            sx: {
+              mt: 1.5,
+              minWidth: 220,
+              borderRadius: 2,
+              backgroundColor: '#2A2E3B',
+              border: '1px solid rgba(255,255,255,0.08)',
+            },
+          },
         }}
       >
         <Box sx={{ px: 2, py: 1.5 }}>
-          <Typography variant="subtitle2" color="text.secondary">
+          <Typography variant="subtitle2" sx={{ color: '#B0B5BF' }}>
             Signed in as
           </Typography>
-          <Typography variant="body2" fontWeight={600}>
+          <Typography variant="body2" fontWeight={600} sx={{ color: '#FFFFFF' }}>
             {user?.telegram_username ? `@${user.telegram_username}` : user?.email || user?.phone || 'User'}
           </Typography>
         </Box>
-        <MenuItem component={Link} to="/app/profile" onClick={handleMenuClose}>
+        <MenuItem component={Link} to="/app/profile" onClick={handleMenuClose} sx={{ color: '#FFFFFF' }}>
           User Profile
         </MenuItem>
-        <MenuItem onClick={handleLogout} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleLogout} sx={{ color: '#EF4444' }}>
           <LogoutIcon sx={{ mr: 1, fontSize: 20 }} /> Log out
         </MenuItem>
       </Menu>
-    </AppBar>
+    </>
   )
 }

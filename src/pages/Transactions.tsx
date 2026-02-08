@@ -11,7 +11,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   IconButton,
   Dialog,
   DialogTitle,
@@ -158,7 +157,10 @@ export default function Transactions() {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">Transactions</Typography>
+        <Box>
+          <Typography variant="h4" fontWeight={700}>Transactions</Typography>
+          <Typography variant="body2" color="text.secondary">View and manage all your transactions</Typography>
+        </Box>
         <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()}>
           Add Transaction
         </Button>
@@ -166,7 +168,8 @@ export default function Transactions() {
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-      <TableContainer component={Paper}>
+      <Card sx={{ overflow: 'hidden' }}>
+        <TableContainer component={Box}>
         <Table>
           <TableHead>
             <TableRow>
@@ -215,6 +218,7 @@ export default function Transactions() {
           </TableBody>
         </Table>
       </TableContainer>
+      </Card>
 
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
         <form onSubmit={handleSubmit(onSubmit)}>

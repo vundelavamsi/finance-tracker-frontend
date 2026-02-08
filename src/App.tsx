@@ -40,6 +40,7 @@ function App() {
             <Route path="transactions" element={<Transactions />} />
             <Route path="accounts" element={<Accounts />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="configuration" element={<Settings />} />
             <Route path="profile" element={<UserProfile />} />
           </Route>
         </Routes>

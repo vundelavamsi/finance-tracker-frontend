@@ -14,19 +14,56 @@ import ReceiptIcon from '@mui/icons-material/Receipt'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import SettingsIcon from '@mui/icons-material/Settings'
 import PersonIcon from '@mui/icons-material/Person'
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
+import { themeColors } from '../../theme'
 
 const drawerWidth = 260
+const { SIDEBAR_BG, ACCENT_BLUE } = themeColors
 
-const menuItems = [
+const mainMenuItems = [
   { text: 'Dashboard', icon: DashboardIcon, path: '/app' },
   { text: 'Transactions', icon: ReceiptIcon, path: '/app/transactions' },
-  { text: 'Bank Accounts', icon: AccountBalanceIcon, path: '/app/accounts' },
-  { text: 'Settings', icon: SettingsIcon, path: '/app/settings' },
+  { text: 'Accounts', icon: AccountBalanceIcon, path: '/app/accounts' },
   { text: 'User Profile', icon: PersonIcon, path: '/app/profile' },
 ]
+const settingsItem = { text: 'Configuration', icon: SettingsIcon, path: '/app/configuration' }
 
 export default function Sidebar() {
   const location = useLocation()
+
+  const renderItem = (item: { text: string; icon: React.ElementType; path: string }) => {
+    const isActive = location.pathname === item.path
+    const Icon = item.icon
+    return (
+      <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
+        <ListItemButton
+          component={Link}
+          to={item.path}
+          selected={isActive}
+          sx={{
+            color: isActive ? '#fff' : '#B0B5BF',
+            borderRadius: 1,
+            '&.Mui-selected': {
+              backgroundColor: ACCENT_BLUE,
+              '&:hover': { backgroundColor: '#2563EB' },
+            },
+            '&:hover': { backgroundColor: 'rgba(255,255,255,0.06)' },
+          }}
+        >
+          <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+            <Icon sx={{ fontSize: 22 }} />
+          </ListItemIcon>
+          <ListItemText
+            primary={item.text}
+            primaryTypographyProps={{
+              fontWeight: isActive ? 600 : 500,
+              fontSize: '0.9375rem',
+            }}
+          />
+        </ListItemButton>
+      </ListItem>
+    )
+  }
 
   return (
     <Drawer
@@ -37,67 +74,39 @@ export default function Sidebar() {
         '& .MuiDrawer-paper': {
           width: drawerWidth,
           boxSizing: 'border-box',
-          marginTop: '64px',
-          backgroundColor: '#FFFFFF',
-          borderRight: '1px solid rgba(0,0,0,0.06)',
+          marginTop: 0,
+          top: 0,
+          height: '100vh',
+          backgroundColor: SIDEBAR_BG,
+          borderRight: '1px solid rgba(255,255,255,0.06)',
         },
       }}
     >
-      <Box sx={{ py: 2, px: 2 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1.5,
-            px: 2,
-            mb: 2,
-          }}
-        >
+      <Box sx={{ py: 2, px: 2, display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: 2, mb: 3 }}>
           <Box
             sx={{
-              width: 40,
-              height: 40,
+              width: 44,
+              height: 44,
               borderRadius: 2,
-              bgcolor: 'primary.main',
+              bgcolor: ACCENT_BLUE,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: 'white',
-              fontWeight: 700,
-              fontSize: '1.25rem',
             }}
           >
-            F
+            <AccountBalanceWalletIcon sx={{ fontSize: 26 }} />
           </Box>
-          <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
-            Finance
+          <Typography variant="h6" sx={{ fontWeight: 600, color: '#FFFFFF' }}>
+            FinanceTracker
           </Typography>
         </Box>
-        <List disablePadding>
-          {menuItems.map((item) => {
-            const isActive = location.pathname === item.path
-            const Icon = item.icon
-            return (
-              <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
-                <ListItemButton
-                  component={Link}
-                  to={item.path}
-                  selected={isActive}
-                >
-                  <ListItemIcon sx={{ color: isActive ? 'primary.main' : undefined }}>
-                    <Icon sx={{ fontSize: 22 }} />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={item.text}
-                    primaryTypographyProps={{
-                      fontWeight: isActive ? 600 : 500,
-                      fontSize: '0.9375rem',
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            )
-          })}
+        <List disablePadding sx={{ flex: 1 }}>
+          {mainMenuItems.map(renderItem)}
+        </List>
+        <List disablePadding sx={{ pt: 2, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          {renderItem(settingsItem)}
         </List>
       </Box>
     </Drawer>
