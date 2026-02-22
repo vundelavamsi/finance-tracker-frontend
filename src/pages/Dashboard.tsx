@@ -21,7 +21,6 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
-import AddIcon from '@mui/icons-material/Add'
 import {
   LineChart,
   Line,
@@ -40,9 +39,7 @@ import { formatCurrency } from '../utils/formatters'
 import { useAuth } from '../contexts/AuthContext'
 import { themeColors } from '../theme'
 
-const { ACCENT_BLUE, TEXT_SECONDARY, SUCCESS, ERROR } = themeColors
-const INCOME_COLOR = SUCCESS
-const EXPENSE_COLOR = ERROR
+const { ACCENT_BLUE } = themeColors
 const CHART_COLORS = [ACCENT_BLUE, '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#64748B']
 
 function computePercentChange(
@@ -74,13 +71,13 @@ function SummaryCard({
   iconColor?: string
 }) {
   return (
-    <Card>
-      <CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 1 }}>
+    <Card sx={{ bgcolor: '#FFFFFF', borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
           <Box
             sx={{
-              width: 44,
-              height: 44,
+              width: 48,
+              height: 48,
               borderRadius: 2,
               bgcolor: iconBg,
               display: 'flex',
@@ -89,7 +86,7 @@ function SummaryCard({
               color: iconColor,
             }}
           >
-            <Icon sx={{ fontSize: 24 }} />
+            <Icon sx={{ fontSize: 26 }} />
           </Box>
           {changeLabel != null && (
             <Chip
@@ -98,17 +95,18 @@ function SummaryCard({
               sx={{
                 fontWeight: 600,
                 fontSize: '0.75rem',
-                bgcolor: changePositive ? 'rgba(40, 167, 69, 0.2)' : 'rgba(220, 53, 69, 0.2)',
-                color: changePositive ? SUCCESS : ERROR,
+                bgcolor: changePositive ? '#D1FAE5' : '#FEE2E2',
+                color: changePositive ? '#059669' : '#DC2626',
                 border: 'none',
+                height: 24,
               }}
             />
           )}
         </Box>
-        <Typography variant="body2" sx={{ color: TEXT_SECONDARY, fontWeight: 500 }}>
+        <Typography variant="body2" sx={{ color: '#64748B', fontWeight: 500, fontSize: '0.875rem' }}>
           {title}
         </Typography>
-        <Typography variant="h5" fontWeight={700} sx={{ mt: 0.5, color: 'text.primary' }}>
+        <Typography variant="h5" fontWeight={700} sx={{ mt: 1, color: '#0F172A', fontSize: '1.75rem' }}>
           {value}
         </Typography>
       </CardContent>
@@ -182,7 +180,7 @@ export default function Dashboard() {
   const totalExpense = stats.category_breakdown.reduce((s, c) => s + c.amount, 0)
 
   return (
-    <Box>
+    <Box sx={{ bgcolor: '#F8FAFC', minHeight: '100vh', p: 4 }}>
       {/* Title row */}
       <Box
         sx={{
@@ -195,28 +193,13 @@ export default function Dashboard() {
         }}
       >
         <Box>
-          <Typography variant="h4" fontWeight={700} gutterBottom>
+          <Typography variant="h4" fontWeight={700} sx={{ color: '#0F172A', fontSize: '1.875rem' }} gutterBottom>
             Dashboard Overview
           </Typography>
-          <Typography variant="body1" sx={{ color: TEXT_SECONDARY }}>
+          <Typography variant="body1" sx={{ color: '#64748B', fontSize: '0.95rem' }}>
             Welcome back, {displayName}. Here&apos;s what&apos;s happening with your money today.
           </Typography>
         </Box>
-        <Button
-          component={Link}
-          to="/app/transactions"
-          variant="contained"
-          startIcon={<AddIcon />}
-          sx={{
-            bgcolor: ACCENT_BLUE,
-            color: '#fff',
-            borderRadius: 2,
-            px: 2,
-            '&:hover': { bgcolor: '#2563EB' },
-          }}
-        >
-          Add Transaction
-        </Button>
       </Box>
 
       {/* Summary cards */}
@@ -228,8 +211,8 @@ export default function Dashboard() {
             changeLabel={incomeChange != null ? `${incomeChange >= 0 ? '+' : ''}${incomeChange.toFixed(1)}%` : undefined}
             changePositive={incomeChange == null || incomeChange >= 0}
             icon={TrendingUpIcon}
-            iconBg="rgba(40, 167, 69, 0.25)"
-            iconColor={INCOME_COLOR}
+            iconBg="#D1FAE5"
+            iconColor="#059669"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -243,8 +226,8 @@ export default function Dashboard() {
             }
             changePositive={expenseChange != null && expenseChange <= 0}
             icon={ShoppingCartIcon}
-            iconBg="rgba(220, 53, 69, 0.25)"
-            iconColor={EXPENSE_COLOR}
+            iconBg="#FEE2E2"
+            iconColor="#DC2626"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -254,7 +237,7 @@ export default function Dashboard() {
             changeLabel={netChange != null ? `${netChange >= 0 ? '+' : ''}${netChange.toFixed(1)}%` : undefined}
             changePositive={netChange == null || netChange >= 0}
             icon={CreditCardIcon}
-            iconBg="rgba(46, 117, 251, 0.3)"
+            iconBg="#DBEAFE"
             iconColor={ACCENT_BLUE}
           />
         </Grid>
@@ -268,7 +251,7 @@ export default function Dashboard() {
             changeLabel="Overall"
             changePositive
             icon={AccountBalanceWalletIcon}
-            iconBg="rgba(245, 158, 11, 0.3)"
+            iconBg="#FEF3C7"
             iconColor="#F59E0B"
           />
         </Grid>
@@ -277,42 +260,45 @@ export default function Dashboard() {
       {/* Charts */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} lg={7}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" fontWeight={600} gutterBottom>
+          <Card sx={{ bgcolor: '#FFFFFF', borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="h6" fontWeight={700} sx={{ color: '#0F172A', fontSize: '1.125rem' }} gutterBottom>
                 Cashflow Performance
               </Typography>
-              <Typography variant="body2" sx={{ color: TEXT_SECONDARY, mb: 2 }}>
+              <Typography variant="body2" sx={{ color: '#64748B', mb: 3, fontSize: '0.875rem' }}>
                 Income vs. Expenses (Last 6 Months)
               </Typography>
               <ResponsiveContainer width="100%" height={280}>
                 <LineChart data={cashflowData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
-                  <XAxis dataKey="month" tick={{ fill: TEXT_SECONDARY, fontSize: 12 }} />
-                  <YAxis tick={{ fill: TEXT_SECONDARY, fontSize: 12 }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                  <XAxis dataKey="month" tick={{ fill: '#64748B', fontSize: 12 }} />
+                  <YAxis tick={{ fill: '#64748B', fontSize: 12 }} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: themeColors.CARD_BG,
-                      border: `1px solid ${themeColors.BORDER}`,
-                      borderRadius: 10,
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #E2E8F0',
+                      borderRadius: 8,
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                     }}
                     formatter={(value: number) => [formatCurrency(value, 'INR'), '']}
                   />
-                  <Legend />
+                  <Legend wrapperStyle={{ color: '#64748B' }} />
                   <Line
                     type="monotone"
                     dataKey="Income"
-                    stroke={INCOME_COLOR}
-                    strokeWidth={2}
-                    dot={{ r: 4, strokeWidth: 2, fill: themeColors.CARD_BG }}
+                    stroke="#059669"
+                    strokeWidth={3}
+                    dot={{ r: 5, strokeWidth: 2, fill: '#FFFFFF', stroke: '#059669' }}
+                    activeDot={{ r: 6 }}
                     name="Income"
                   />
                   <Line
                     type="monotone"
                     dataKey="Expenses"
-                    stroke={EXPENSE_COLOR}
-                    strokeWidth={2}
-                    dot={{ r: 4, strokeWidth: 2, fill: themeColors.CARD_BG }}
+                    stroke="#DC2626"
+                    strokeWidth={3}
+                    dot={{ r: 5, strokeWidth: 2, fill: '#FFFFFF', stroke: '#DC2626' }}
+                    activeDot={{ r: 6 }}
                     name="Expenses"
                   />
                 </LineChart>
@@ -321,15 +307,15 @@ export default function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={12} lg={5}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" fontWeight={600} gutterBottom>
+          <Card sx={{ bgcolor: '#FFFFFF', borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="h6" fontWeight={700} sx={{ color: '#0F172A', fontSize: '1.125rem' }} gutterBottom>
                 Expense Breakdown
               </Typography>
-              <Typography variant="body2" sx={{ color: TEXT_SECONDARY, mb: 1 }}>
+              <Typography variant="body2" sx={{ color: '#64748B', mb: 1, fontSize: '0.875rem' }}>
                 Categorized spending this month
               </Typography>
-              <Typography variant="h6" sx={{ mb: 2 }}>
+              <Typography variant="h6" fontWeight={700} sx={{ mb: 2, color: '#0F172A', fontSize: '1.25rem' }}>
                 {formatCurrency(totalExpense, 'INR')} TOTAL
               </Typography>
               <ResponsiveContainer width="100%" height={220}>
@@ -360,18 +346,18 @@ export default function Dashboard() {
       {/* Balances by Account & Recent Transactions */}
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6" fontWeight={600}>
+          <Card sx={{ bgcolor: '#FFFFFF', borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Typography variant="h6" fontWeight={700} sx={{ color: '#0F172A', fontSize: '1.125rem' }}>
                   Balances by Account
                 </Typography>
-                <Button component={Link} to="/app/accounts" size="small" sx={{ color: ACCENT_BLUE }}>
+                <Button component={Link} to="/app/accounts" size="small" sx={{ color: ACCENT_BLUE, fontWeight: 600, fontSize: '0.875rem' }}>
                   View All
                 </Button>
               </Box>
               {stats.account_balances.length === 0 ? (
-                <Typography variant="body2" sx={{ color: TEXT_SECONDARY }}>
+                <Typography variant="body2" sx={{ color: '#64748B' }}>
                   No accounts yet
                 </Typography>
               ) : (
@@ -383,23 +369,24 @@ export default function Dashboard() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        p: 1.5,
+                        p: 2,
                         borderRadius: 2,
-                        bgcolor: 'rgba(255,255,255,0.04)',
+                        bgcolor: '#F8FAFC',
+                        border: '1px solid #E2E8F0',
                       }}
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                        <CreditCardIcon sx={{ color: TEXT_SECONDARY, fontSize: 20 }} />
+                        <CreditCardIcon sx={{ color: ACCENT_BLUE, fontSize: 22 }} />
                         <Box>
-                          <Typography variant="body2" fontWeight={600}>
+                          <Typography variant="body2" fontWeight={600} sx={{ color: '#0F172A' }}>
                             {acc.name}
                           </Typography>
-                          <Typography variant="caption" sx={{ color: TEXT_SECONDARY }}>
+                          <Typography variant="caption" sx={{ color: '#64748B', textTransform: 'capitalize' }}>
                             {acc.type}
                           </Typography>
                         </Box>
                       </Box>
-                      <Typography variant="body2" fontWeight={600}>
+                      <Typography variant="body2" fontWeight={700} sx={{ color: '#0F172A' }}>
                         {formatCurrency(acc.balance, acc.currency)}
                       </Typography>
                     </Box>
@@ -410,27 +397,27 @@ export default function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6" fontWeight={600}>
+          <Card sx={{ bgcolor: '#FFFFFF', borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Typography variant="h6" fontWeight={700} sx={{ color: '#0F172A', fontSize: '1.125rem' }}>
                   Recent Transactions
                 </Typography>
-                <Button component={Link} to="/app/transactions" size="small" sx={{ color: ACCENT_BLUE }}>
+                <Button component={Link} to="/app/transactions" size="small" sx={{ color: ACCENT_BLUE, fontWeight: 600, fontSize: '0.875rem' }}>
                   See Statement
                 </Button>
               </Box>
               {stats.recent_transactions.length === 0 ? (
-                <Typography sx={{ color: TEXT_SECONDARY }}>No recent transactions</Typography>
+                <Typography sx={{ color: '#64748B' }}>No recent transactions</Typography>
               ) : (
                 <TableContainer>
                   <Table size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell>TRANSACTION</TableCell>
-                        <TableCell>DATE</TableCell>
-                        <TableCell>CATEGORY</TableCell>
-                        <TableCell align="right">AMOUNT</TableCell>
+                        <TableCell sx={{ color: '#64748B', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '2px solid #E2E8F0' }}>TRANSACTION</TableCell>
+                        <TableCell sx={{ color: '#64748B', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '2px solid #E2E8F0' }}>DATE</TableCell>
+                        <TableCell sx={{ color: '#64748B', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '2px solid #E2E8F0' }}>CATEGORY</TableCell>
+                        <TableCell align="right" sx={{ color: '#64748B', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '2px solid #E2E8F0' }}>AMOUNT</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -438,24 +425,38 @@ export default function Dashboard() {
                         const amount = parseFloat(txn.amount)
                         const isIncome = amount > 0
                         return (
-                          <TableRow key={txn.id} hover>
-                            <TableCell>
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <ShoppingCartIcon sx={{ fontSize: 18, color: TEXT_SECONDARY }} />
-                                {txn.merchant || '—'}
+                          <TableRow key={txn.id} hover sx={{ '&:hover': { bgcolor: '#F8FAFC' } }}>
+                            <TableCell sx={{ borderBottom: '1px solid #E2E8F0' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                <ShoppingCartIcon sx={{ fontSize: 20, color: '#64748B' }} />
+                                <Typography variant="body2" fontWeight={600} sx={{ color: '#0F172A' }}>
+                                  {txn.merchant || '—'}
+                                </Typography>
                               </Box>
                             </TableCell>
-                            <TableCell sx={{ color: TEXT_SECONDARY }}>
+                            <TableCell sx={{ color: '#64748B', fontSize: '0.875rem', borderBottom: '1px solid #E2E8F0' }}>
                               {new Date(txn.date).toLocaleDateString()}
                             </TableCell>
-                            <TableCell sx={{ color: TEXT_SECONDARY }}>
-                              {txn.category || 'Uncategorized'}
+                            <TableCell sx={{ borderBottom: '1px solid #E2E8F0' }}>
+                              <Chip
+                                label={txn.category || 'Uncategorized'}
+                                size="small"
+                                sx={{
+                                  bgcolor: '#F1F5F9',
+                                  color: '#475569',
+                                  fontSize: '0.75rem',
+                                  fontWeight: 600,
+                                  height: 24,
+                                }}
+                              />
                             </TableCell>
                             <TableCell
                               align="right"
                               sx={{
-                                fontWeight: 600,
-                                color: isIncome ? SUCCESS : ERROR,
+                                fontWeight: 700,
+                                fontSize: '0.875rem',
+                                color: isIncome ? '#059669' : '#DC2626',
+                                borderBottom: '1px solid #E2E8F0',
                               }}
                             >
                               {formatCurrency(amount, txn.currency)}

@@ -1,20 +1,20 @@
 import { createTheme } from '@mui/material/styles'
 
-const BG_DARK = '#1A1E2B'
-const CARD_BG = '#212534'
-const HEADER_BG = '#212534'
-const SIDEBAR_BG = '#1A1E2B'
-const ACCENT_BLUE = '#2E75FB'
+const BG_LIGHT = '#F8FAFC'
+const CARD_BG = '#FFFFFF'
+const HEADER_BG = '#FFFFFF'
+const SIDEBAR_BG = '#FFFFFF'
+const ACCENT_BLUE = '#137fec'
 const ACCENT_BLUE_HOVER = '#2563EB'
-const TEXT_PRIMARY = '#FFFFFF'
-const TEXT_SECONDARY = '#B0B5BF'
-const SUCCESS = '#28A745'
-const ERROR = '#DC3545'
-const BORDER = 'rgba(255,255,255,0.08)'
+const TEXT_PRIMARY = '#0F172A'
+const TEXT_SECONDARY = '#64748B'
+const SUCCESS = '#059669'
+const ERROR = '#DC2626'
+const BORDER = '#E2E8F0'
 
 export const appTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: 'light',
     primary: {
       main: ACCENT_BLUE,
       dark: ACCENT_BLUE_HOVER,
@@ -22,7 +22,7 @@ export const appTheme = createTheme({
       contrastText: '#FFFFFF',
     },
     background: {
-      default: BG_DARK,
+      default: BG_LIGHT,
       paper: CARD_BG,
     },
     text: {
@@ -47,8 +47,8 @@ export const appTheme = createTheme({
         root: {
           backgroundColor: CARD_BG,
           border: `1px solid ${BORDER}`,
-          borderRadius: 16,
-          boxShadow: 'none',
+          borderRadius: 12,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
         },
       },
     },
@@ -66,7 +66,7 @@ export const appTheme = createTheme({
         root: {
           backgroundColor: CARD_BG,
           border: `1px solid ${BORDER}`,
-          borderRadius: 16,
+          borderRadius: 12,
           color: TEXT_PRIMARY,
         },
       },
@@ -89,9 +89,9 @@ export const appTheme = createTheme({
         root: {
           '& .MuiOutlinedInput-root': {
             borderRadius: 10,
-            backgroundColor: 'rgba(255,255,255,0.06)',
+            backgroundColor: '#FFFFFF',
             '& fieldset': { borderColor: BORDER },
-            '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.12)' },
+            '&:hover fieldset': { borderColor: '#CBD5E1' },
           },
         },
       },
@@ -147,7 +147,7 @@ export const appTheme = createTheme({
 })
 
 export const themeColors = {
-  BG_DARK,
+  BG_LIGHT,
   CARD_BG,
   HEADER_BG,
   SIDEBAR_BG,
