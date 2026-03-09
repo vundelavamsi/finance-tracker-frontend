@@ -8,6 +8,7 @@ export interface Transaction {
   account_id: number | null
   source_image_url: string | null
   status: string
+  transaction_type?: string | null
   category?: {
     id: number
     name: string
@@ -30,6 +31,7 @@ export interface TransactionCreate {
   account_id?: number | null
   source_image_url?: string | null
   status?: string
+  transaction_type?: string
 }
 
 export interface TransactionUpdate {
@@ -39,4 +41,5 @@ export interface TransactionUpdate {
   category_id?: number | null
   account_id?: number | null
   status?: string
+  transaction_type?: string
 }

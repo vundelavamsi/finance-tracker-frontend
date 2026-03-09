@@ -31,3 +31,19 @@ export const updateTransaction = async (id: number, data: TransactionUpdate): Pr
 export const deleteTransaction = async (id: number): Promise<void> => {
   await api.delete(`/transactions/${id}`)
 }
+
+export const getMerchants = async (): Promise<string[]> => {
+  const response = await api.get('/transactions/merchants')
+  return response.data
+}
+
+export const renameMerchant = async (merchantName: string, newName: string): Promise<string[]> => {
+  const response = await api.put(`/transactions/merchants/${encodeURIComponent(merchantName)}`, { new_name: newName })
+  return response.data
+}
+
+export const deleteMerchant = async (merchantName: string): Promise<void> => {
+  await api.delete(`/transactions/merchants/${encodeURIComponent(merchantName)}`)
+}
+
+

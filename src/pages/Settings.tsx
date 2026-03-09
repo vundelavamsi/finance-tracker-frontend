@@ -17,15 +17,21 @@ import {
   Chip,
   Switch,
   FormControlLabel,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
 } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
+import SaveIcon from '@mui/icons-material/Save'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../services/categories'
 import { getCurrentUser, updateCurrentUser } from '../services/users'
+import { getMerchants, renameMerchant, deleteMerchant } from '../services/transactions'
 import type { Category, CategoryCreate, CategoryType } from '../types/category'
 import type { User } from '../types/user'
 
@@ -49,6 +55,10 @@ export default function Settings() {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
   const [dialogMode, setDialogMode] = useState<'income' | 'expense' | 'sub'>('expense')
   const [subCategoryParentId, setSubCategoryParentId] = useState<number | null>(null)
+  const [merchants, setMerchants] = useState<string[]>([])
+  const [merchantsLoading, setMerchantsLoading] = useState(false)
+  const [editingMerchant, setEditingMerchant] = useState<string | null>(null)
+  const [editMerchantValue, setEditMerchantValue] = useState('')
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
@@ -59,6 +69,7 @@ export default function Settings() {
 
   useEffect(() => {
     loadData()
+    loadMerchants()
   }, [])
 
   const loadData = async () => {
@@ -78,6 +89,42 @@ export default function Settings() {
       console.error(err)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const loadMerchants = async () => {
+    try {
+      setMerchantsLoading(true)
+      const result = await getMerchants()
+      setMerchants(result)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setMerchantsLoading(false)
+    }
+  }
+
+  const handleRenameMerchant = async (oldName: string) => {
+    if (!editMerchantValue.trim()) return
+    try {
+      const updated = await renameMerchant(oldName, editMerchantValue.trim())
+      setMerchants(updated)
+      setEditingMerchant(null)
+      setEditMerchantValue('')
+    } catch (err) {
+      console.error(err)
+      setError('Failed to rename merchant')
+    }
+  }
+
+  const handleDeleteMerchant = async (name: string) => {
+    if (!window.confirm(`Remove merchant "${name}" from all transactions?`)) return
+    try {
+      await deleteMerchant(name)
+      setMerchants((prev) => prev.filter((m) => m !== name))
+    } catch (err) {
+      console.error(err)
+      setError('Failed to delete merchant')
     }
   }
 
@@ -334,6 +381,72 @@ export default function Settings() {
                 </Box>
               ))}
             </>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Section 4: Saved Merchants */}
+      <Card sx={{ mt: 3 }}>
+        <CardContent>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h6">Saved Merchants</Typography>
+          </Box>
+          {merchantsLoading ? (
+            <CircularProgress size={24} />
+          ) : merchants.length === 0 ? (
+            <Typography color="textSecondary">No merchants saved yet.</Typography>
+          ) : (
+            <List disablePadding>
+              {merchants.map((merchant) => (
+                <ListItem
+                  key={merchant}
+                  divider
+                  sx={{ px: 0 }}
+                >
+                  {editingMerchant === merchant ? (
+                    <Box display="flex" alignItems="center" gap={1} width="100%">
+                      <TextField
+                        size="small"
+                        value={editMerchantValue}
+                        onChange={(e) => setEditMerchantValue(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleRenameMerchant(merchant) }}
+                        autoFocus
+                        sx={{ flex: 1 }}
+                      />
+                      <Button
+                        size="small"
+                        variant="contained"
+                        startIcon={<SaveIcon />}
+                        onClick={() => handleRenameMerchant(merchant)}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        size="small"
+                        onClick={() => { setEditingMerchant(null); setEditMerchantValue('') }}
+                      >
+                        Cancel
+                      </Button>
+                    </Box>
+                  ) : (
+                    <>
+                      <ListItemText primary={merchant} />
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          size="small"
+                          onClick={() => { setEditingMerchant(merchant); setEditMerchantValue(merchant) }}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton size="small" onClick={() => handleDeleteMerchant(merchant)}>
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </>
+                  )}
+                </ListItem>
+              ))}
+            </List>
           )}
         </CardContent>
       </Card>

@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   Box,
   List,
@@ -9,7 +9,7 @@ import {
   Drawer,
   Typography,
   Avatar,
-  IconButton,
+  Tooltip,
 } from '@mui/material'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import ReceiptIcon from '@mui/icons-material/Receipt'
@@ -33,6 +33,7 @@ const mainMenuItems = [
 
 export default function Sidebar() {
   const location = useLocation()
+  const navigate = useNavigate()
   const { user, logout } = useAuth()
 
   const renderItem = (item: { text: string; icon: React.ElementType; path: string }) => {
@@ -123,60 +124,103 @@ export default function Sidebar() {
         </List>
 
         {/* User Profile Section */}
-        <Box sx={{ pt: 2, px: 1, borderTop: '1px solid #F1F5F9' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 1 }}>
-            <Avatar
+        <Box
+          sx={{
+            pt: 2,
+            px: 1,
+            borderTop: '1px solid #E2E8F0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          {/* User info — clickable, navigates to profile */}
+          <Tooltip title="View profile" placement="top" arrow>
+            <Box
+              onClick={() => navigate('/app/profile')}
               sx={{
-                width: 40,
-                height: 40,
-                bgcolor: '#CBD5E1',
-                color: '#475569',
-                fontWeight: 600,
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1.5,
+                p: 1,
+                borderRadius: 2,
+                cursor: 'pointer',
+                overflow: 'hidden',
+                transition: 'background-color 150ms',
+                '&:hover': { backgroundColor: '#F1F5F9' },
               }}
             >
-              {(user?.telegram_username || user?.email || user?.phone || 'U').charAt(0).toUpperCase()}
-            </Avatar>
-            <Box sx={{ flex: 1, overflow: 'hidden' }}>
-              <Typography
-                variant="body2"
+              <Avatar
                 sx={{
+                  width: 34,
+                  height: 34,
+                  flexShrink: 0,
+                  bgcolor: ACCENT_BLUE,
+                  color: '#fff',
                   fontWeight: 700,
-                  color: '#0F172A',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
                   fontSize: '0.875rem',
                 }}
               >
-                {user?.telegram_username ? user.telegram_username.replace('@', '') : user?.email || user?.phone || 'User'}
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{
-                  color: '#64748B',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  fontSize: '0.75rem',
-                }}
-              >
-                {user?.telegram_username ? `@${user.telegram_username.replace('@', '')}` : 'User'}
-              </Typography>
+                {(user?.telegram_username || user?.email || user?.phone || 'U').charAt(0).toUpperCase()}
+              </Avatar>
+              <Box sx={{ overflow: 'hidden' }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: 700,
+                    color: '#0F172A',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    fontSize: '0.8rem',
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {user?.telegram_username ? user.telegram_username.replace('@', '') : user?.email || user?.phone || 'User'}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: '#94A3B8',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    fontSize: '0.7rem',
+                    display: 'block',
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {user?.telegram_username ? `@${user.telegram_username.replace('@', '')}` : 'View profile'}
+                </Typography>
+              </Box>
             </Box>
-            <IconButton
+          </Tooltip>
+
+          {/* Logout icon — visually separated */}
+          <Tooltip title="Sign out" placement="top" arrow>
+            <Box
               onClick={logout}
-              size="small"
               sx={{
+                flexShrink: 0,
+                width: 34,
+                height: 34,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 2,
+                cursor: 'pointer',
                 color: '#94A3B8',
+                transition: 'color 150ms, background-color 150ms',
                 '&:hover': {
-                  color: '#475569',
-                  bgcolor: '#F1F5F9',
+                  color: '#EF4444',
+                  backgroundColor: '#FEF2F2',
                 },
               }}
             >
-              <LogoutIcon sx={{ fontSize: 20 }} />
-            </IconButton>
-          </Box>
+              <LogoutIcon sx={{ fontSize: 18 }} />
+            </Box>
+          </Tooltip>
         </Box>
       </Box>
     </Drawer>

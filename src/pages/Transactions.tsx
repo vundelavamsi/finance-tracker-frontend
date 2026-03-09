@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Card,
-  CardContent,
   Typography,
   Table,
   TableBody,
@@ -20,14 +19,16 @@ import {
   MenuItem,
   CircularProgress,
   Alert,
+  Autocomplete,
+  Divider,
 } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { getTransactions, createTransaction, updateTransaction, deleteTransaction } from '../services/transactions'
+import { getTransactions, createTransaction, updateTransaction, deleteTransaction, getMerchants } from '../services/transactions'
 import { getCategories } from '../services/categories'
 import { getAccounts } from '../services/accounts'
 import { Transaction, TransactionCreate } from '../types/transaction'
@@ -39,9 +40,10 @@ const transactionSchema = z.object({
   amount: z.string().min(1, 'Amount is required'),
   currency: z.string().default('INR'),
   merchant: z.string().optional(),
-  category_id: z.union([z.number(), z.string(), z.null()]).optional().transform((val) => val === '' ? null : (typeof val === 'string' ? Number(val) : val)),
+  category_id: z.number().nullable().optional(),
   account_id: z.union([z.number(), z.string(), z.null()]).optional().transform((val) => val === '' ? null : (typeof val === 'string' ? Number(val) : val)),
   status: z.string().default('PENDING'),
+  transaction_type: z.enum(['INCOME', 'EXPENSE']).default('EXPENSE'),
 })
 
 type TransactionFormData = z.infer<typeof transactionSchema>
@@ -50,14 +52,26 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [accounts, setAccounts] = useState<Account[]>([])
+  const [merchants, setMerchants] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [openDialog, setOpenDialog] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
+  // Tracks which parent category is selected in the dialog (UI state only)
+  const [selectedParentId, setSelectedParentId] = useState<number | null>(null)
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<TransactionFormData>({
+  const { register, handleSubmit, reset, control, setValue, watch, formState: { errors } } = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
   })
+
+  // Derived category lists
+  const currentType = watch('transaction_type')
+  const parentCategories = categories.filter(c => {
+    if (c.parent_id !== null) return false
+    if (!c.category_type) return true
+    return c.category_type === currentType
+  })
+  const subCategories = categories.filter(c => c.parent_id === selectedParentId)
 
   useEffect(() => {
     loadData()
@@ -66,14 +80,16 @@ export default function Transactions() {
   const loadData = async () => {
     try {
       setLoading(true)
-      const [txns, cats, accs] = await Promise.all([
+      const [txns, cats, accs, merch] = await Promise.all([
         getTransactions(),
         getCategories(),
         getAccounts(),
+        getMerchants(),
       ])
       setTransactions(txns)
       setCategories(cats)
       setAccounts(accs)
+      setMerchants(merch)
       setError(null)
     } catch (err) {
       setError('Failed to load data')
@@ -86,23 +102,38 @@ export default function Transactions() {
   const handleOpenDialog = (transaction?: Transaction) => {
     if (transaction) {
       setEditingTransaction(transaction)
+      // Resolve parent/sub for the existing category_id
+      const cat = categories.find(c => c.id === transaction.category_id)
+      if (cat?.parent_id) {
+        // It's a sub-category — set parent and keep category_id as the sub
+        setSelectedParentId(cat.parent_id)
+      } else if (cat) {
+        // It's a parent category itself
+        setSelectedParentId(cat.id)
+      } else {
+        setSelectedParentId(null)
+      }
+      const txnType = transaction.transaction_type || (parseFloat(transaction.amount) >= 0 ? 'INCOME' : 'EXPENSE')
       reset({
-        amount: transaction.amount,
+        amount: String(Math.abs(parseFloat(transaction.amount))),
         currency: transaction.currency,
         merchant: transaction.merchant || '',
-        category_id: transaction.category_id || '',
-        account_id: transaction.account_id || '',
+        category_id: transaction.category_id ?? null,
+        account_id: transaction.account_id ?? null,
         status: transaction.status,
+        transaction_type: txnType as 'INCOME' | 'EXPENSE',
       })
     } else {
       setEditingTransaction(null)
+      setSelectedParentId(null)
       reset({
         amount: '',
         currency: 'INR',
         merchant: '',
-        category_id: '',
-        account_id: '',
+        category_id: null,
+        account_id: null,
         status: 'PENDING',
+        transaction_type: 'EXPENSE',
       })
     }
     setOpenDialog(true)
@@ -111,15 +142,22 @@ export default function Transactions() {
   const handleCloseDialog = () => {
     setOpenDialog(false)
     setEditingTransaction(null)
+    setSelectedParentId(null)
     reset()
   }
 
   const onSubmit = async (data: TransactionFormData) => {
     try {
-      const submitData = {
+      // Store as negative for EXPENSE, positive for INCOME
+      const signedAmount = data.transaction_type === 'EXPENSE'
+        ? String(-Math.abs(parseFloat(data.amount)))
+        : String(Math.abs(parseFloat(data.amount)))
+
+      const submitData: TransactionCreate = {
         ...data,
-        category_id: data.category_id === '' ? null : data.category_id,
-        account_id: data.account_id === '' ? null : data.account_id,
+        amount: signedAmount,
+        category_id: data.category_id ?? null,
+        account_id: data.account_id ?? null,
       }
       if (editingTransaction) {
         await updateTransaction(editingTransaction.id, submitData)
@@ -224,14 +262,58 @@ export default function Transactions() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogTitle>{editingTransaction ? 'Edit Transaction' : 'Add Transaction'}</DialogTitle>
           <DialogContent>
+
+            {/* Transaction Type Toggle */}
+            <Box sx={{ display: 'flex', gap: 1, mb: 2, mt: 1 }}>
+              <Button
+                fullWidth
+                variant={watch('transaction_type') === 'INCOME' ? 'contained' : 'outlined'}
+                onClick={() => {
+                  setValue('transaction_type', 'INCOME')
+                  setSelectedParentId(null)
+                  setValue('category_id', null)
+                }}
+                sx={{
+                  bgcolor: watch('transaction_type') === 'INCOME' ? '#22c55e' : 'transparent',
+                  color: watch('transaction_type') === 'INCOME' ? 'white' : '#22c55e',
+                  borderColor: '#22c55e',
+                  '&:hover': { bgcolor: watch('transaction_type') === 'INCOME' ? '#16a34a' : '#f0fdf4' },
+                }}
+              >
+                ↑ Income
+              </Button>
+              <Button
+                fullWidth
+                variant={watch('transaction_type') === 'EXPENSE' ? 'contained' : 'outlined'}
+                onClick={() => {
+                  setValue('transaction_type', 'EXPENSE')
+                  setSelectedParentId(null)
+                  setValue('category_id', null)
+                }}
+                sx={{
+                  bgcolor: watch('transaction_type') === 'EXPENSE' ? '#ef4444' : 'transparent',
+                  color: watch('transaction_type') === 'EXPENSE' ? 'white' : '#ef4444',
+                  borderColor: '#ef4444',
+                  '&:hover': { bgcolor: watch('transaction_type') === 'EXPENSE' ? '#dc2626' : '#fef2f2' },
+                }}
+              >
+                ↓ Expense
+              </Button>
+            </Box>
+
+            {/* Amount */}
             <TextField
               fullWidth
               label="Amount"
+              type="number"
+              inputProps={{ min: 0, step: 0.01 }}
               {...register('amount')}
               error={!!errors.amount}
               helperText={errors.amount?.message}
               margin="normal"
             />
+
+            {/* Currency */}
             <TextField
               fullWidth
               select
@@ -243,34 +325,94 @@ export default function Transactions() {
               <MenuItem value="INR">INR</MenuItem>
               <MenuItem value="USD">USD</MenuItem>
             </TextField>
-            <TextField
-              fullWidth
-              label="Merchant"
-              {...register('merchant')}
-              margin="normal"
+
+            {/* Merchant — Autocomplete with saved suggestions + free text */}
+            <Controller
+              name="merchant"
+              control={control}
+              render={({ field }) => (
+                <Autocomplete
+                  freeSolo
+                  options={merchants}
+                  value={field.value || ''}
+                  onInputChange={(_, value) => field.onChange(value)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Merchant"
+                      margin="normal"
+                      fullWidth
+                      helperText="Type or pick a saved merchant"
+                    />
+                  )}
+                />
+              )}
             />
+
+            <Divider sx={{ my: 1.5 }} />
+
+            {/* Parent Category */}
             <TextField
               fullWidth
               select
               label="Category"
-              {...register('category_id', { 
-                setValueAs: (v) => v === '' ? null : Number(v)
-              })}
+              value={selectedParentId ?? ''}
+              onChange={(e) => {
+                const val = e.target.value === '' ? null : Number(e.target.value)
+                setSelectedParentId(val)
+                // Set category_id to the parent by default; sub-selection overrides below
+                setValue('category_id', val)
+              }}
               margin="normal"
-              defaultValue=""
             >
               <MenuItem value="">None</MenuItem>
-              {categories.map((cat) => (
+              {parentCategories.map((cat) => (
                 <MenuItem key={cat.id} value={cat.id}>
                   {cat.name}
                 </MenuItem>
               ))}
             </TextField>
+
+            {/* Sub-category — only shown when selected parent has children */}
+            {selectedParentId !== null && subCategories.length > 0 && (
+              <Controller
+                name="category_id"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    fullWidth
+                    select
+                    label="Sub-category"
+                    value={
+                      // Show the sub-category value only if it's actually a child of the selected parent
+                      field.value !== null && field.value !== selectedParentId ? field.value : ''
+                    }
+                    onChange={(e) => {
+                      const val = e.target.value === '' ? selectedParentId : Number(e.target.value)
+                      field.onChange(val)
+                    }}
+                    margin="normal"
+                    helperText="Optional — leave blank to use parent category"
+                  >
+                    <MenuItem value="">— Use parent category —</MenuItem>
+                    {subCategories.map((cat) => (
+                      <MenuItem key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            )}
+
+            <Divider sx={{ my: 1.5 }} />
+
+            {/* Account */}
             <TextField
               fullWidth
               select
               label="Account"
-              {...register('account_id', { 
+              {...register('account_id', {
                 setValueAs: (v) => v === '' ? null : Number(v)
               })}
               margin="normal"
@@ -283,6 +425,8 @@ export default function Transactions() {
                 </MenuItem>
               ))}
             </TextField>
+
+            {/* Status */}
             <TextField
               fullWidth
               select
@@ -294,6 +438,7 @@ export default function Transactions() {
               <MenuItem value="PENDING">Pending</MenuItem>
               <MenuItem value="VERIFIED">Verified</MenuItem>
             </TextField>
+
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Cancel</Button>
