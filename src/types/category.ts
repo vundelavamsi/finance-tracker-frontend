@@ -10,10 +10,21 @@ export interface Category {
   is_active: boolean
   category_type: CategoryType
   parent_id: number | null
+  order_index?: number
   parent_name?: string | null
   created_at: string
   updated_at: string
   sub_categories?: Category[] | null
+}
+
+export interface CategoryReorderItem {
+  id: number
+  order_index: number
+}
+
+export interface CategoryReorderPayload {
+  parent_id?: number | null
+  items: CategoryReorderItem[]
 }
 
 export interface CategoryCreate {
