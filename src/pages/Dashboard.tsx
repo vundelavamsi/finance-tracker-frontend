@@ -180,7 +180,7 @@ export default function Dashboard() {
   const totalExpense = stats.category_breakdown.reduce((s, c) => s + c.amount, 0)
 
   return (
-    <Box sx={{ bgcolor: '#F8FAFC', minHeight: '100vh', p: 4 }}>
+    <Box sx={{ bgcolor: '#F8FAFC', minHeight: '100vh', p: { xs: 2, sm: 3, md: 4 } }}>
       {/* Title row */}
       <Box
         sx={{
@@ -410,8 +410,8 @@ export default function Dashboard() {
               {stats.recent_transactions.length === 0 ? (
                 <Typography sx={{ color: '#64748B' }}>No recent transactions</Typography>
               ) : (
-                <TableContainer>
-                  <Table size="small">
+                <TableContainer sx={{ overflowX: 'auto' }}>
+                  <Table size="small" sx={{ minWidth: 400 }}>
                     <TableHead>
                       <TableRow>
                         <TableCell sx={{ color: '#64748B', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '2px solid #E2E8F0' }}>TRANSACTION</TableCell>

@@ -107,7 +107,7 @@ export default function Register() {
           overflow: 'hidden',
         }}
       >
-        <Box sx={{ pt: 5, pb: 2, px: 4, textAlign: 'center' }}>
+        <Box sx={{ pt: { xs: 3, sm: 5 }, pb: 2, px: { xs: 2, sm: 4 }, textAlign: 'center' }}>
           <Box
             sx={{
               width: 48,
@@ -140,7 +140,7 @@ export default function Register() {
           </Typography>
         </Box>
 
-        <CardContent sx={{ px: 4, pb: 4 }}>
+        <CardContent sx={{ px: { xs: 2, sm: 4 }, pb: 4 }}>
           {message && (
             <Alert severity={message.type} sx={{ mb: 2 }} onClose={() => setMessage(null)}>
               {message.text}

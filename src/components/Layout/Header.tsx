@@ -2,9 +2,13 @@ import { Link, useLocation } from 'react-router-dom'
 import {
   Box,
   Button,
+  IconButton,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
+import MenuIcon from '@mui/icons-material/Menu'
 
 import { themeColors } from '../../theme'
 const { ACCENT_BLUE } = themeColors
@@ -17,9 +21,15 @@ const PAGE_TITLES: Record<string, string> = {
   '/app/profile': 'User Profile',
 }
 
-export default function Header() {
+interface HeaderProps {
+  onMobileMenuToggle: () => void
+}
+
+export default function Header({ onMobileMenuToggle }: HeaderProps) {
   const location = useLocation()
   const pageTitle = PAGE_TITLES[location.pathname] || 'Dashboard'
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
   return (
     <Box
@@ -28,7 +38,7 @@ export default function Header() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        px: 4,
+        px: { xs: 2, sm: 3, md: 4 },
         height: 64,
         borderBottom: '1px solid #E2E8F0',
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -36,9 +46,31 @@ export default function Header() {
         flexShrink: 0,
       }}
     >
-      <Typography variant="h6" sx={{ fontWeight: 700, color: '#0F172A', fontSize: 18 }}>
-        {pageTitle}
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
+        {isMobile && (
+          <IconButton
+            aria-label="open navigation menu"
+            edge="start"
+            onClick={onMobileMenuToggle}
+            sx={{ color: '#475569', mr: 0.5 }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+        <Typography
+          variant="h6"
+          sx={{
+            fontWeight: 700,
+            color: '#0F172A',
+            fontSize: { xs: 15, sm: 18 },
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {pageTitle}
+        </Typography>
+      </Box>
 
       <Button
         component={Link}
@@ -48,19 +80,20 @@ export default function Header() {
         sx={{
           bgcolor: ACCENT_BLUE,
           color: 'white',
-          px: 2,
+          px: { xs: 1.5, sm: 2 },
           py: 1,
           borderRadius: 2,
-          fontSize: '0.875rem',
+          fontSize: { xs: '0.8rem', sm: '0.875rem' },
           fontWeight: 700,
           textTransform: 'none',
           boxShadow: '0 8px 16px rgba(19, 127, 236, 0.2)',
+          whiteSpace: 'nowrap',
           '&:hover': {
             bgcolor: '#2563EB',
           },
         }}
       >
-        Quick Add
+        {isMobile ? 'Add' : 'Quick Add'}
       </Button>
     </Box>
   )

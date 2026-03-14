@@ -1,12 +1,18 @@
+import { useState } from 'react'
 import { Box } from '@mui/material'
 import { Outlet } from 'react-router-dom'
 import Header from './Header'
 import Sidebar from './Sidebar'
 
 export default function Layout() {
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  const handleMobileToggle = () => setMobileOpen((prev) => !prev)
+  const handleMobileClose = () => setMobileOpen(false)
+
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
-      <Sidebar />
+      <Sidebar mobileOpen={mobileOpen} onMobileClose={handleMobileClose} />
       <Box
         sx={{
           flexGrow: 1,
@@ -16,12 +22,12 @@ export default function Layout() {
           backgroundColor: 'background.default',
         }}
       >
-        <Header />
+        <Header onMobileMenuToggle={handleMobileToggle} />
         <Box
           component="main"
           sx={{
             flex: 1,
-            p: 3,
+            p: { xs: 2, sm: 3 },
           }}
         >
           <Outlet />
