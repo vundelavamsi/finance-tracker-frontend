@@ -433,7 +433,14 @@ export default function Settings() {
 
       <Card sx={{ mt: 3 }}>
         <CardContent>
-          <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+            flexDirection={{ xs: 'column', sm: 'row' }}
+            gap={1}
+            mb={2}
+          >
             <Typography variant="h6">Expense Sub Categories</Typography>
             <FormControlLabel
               control={
@@ -496,7 +503,7 @@ export default function Settings() {
               {merchants.map((merchant) => (
                 <ListItem key={merchant} divider sx={{ px: 0 }}>
                   {editingMerchant === merchant ? (
-                    <Box display="flex" alignItems="center" gap={1} width="100%">
+                    <Box display="flex" alignItems="center" flexWrap="wrap" gap={1} width="100%">
                       <TextField
                         size="small"
                         value={editMerchantValue}
@@ -505,7 +512,7 @@ export default function Settings() {
                           if (e.key === 'Enter') handleRenameMerchant(merchant)
                         }}
                         autoFocus
-                        sx={{ flex: 1 }}
+                        sx={{ flex: 1, minWidth: 120 }}
                       />
                       <Button size="small" variant="contained" startIcon={<SaveIcon />} onClick={() => handleRenameMerchant(merchant)}>
                         Save

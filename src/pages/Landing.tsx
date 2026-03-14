@@ -76,11 +76,12 @@ export default function Landing() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: ACCENT_BLUE,
+                flexShrink: 0,
               }}
             >
               <AccountBalanceWalletIcon sx={{ fontSize: 26 }} />
             </Box>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: '#111827' }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: '#111827', display: { xs: 'none', sm: 'block' } }}>
               Finance Tracker
             </Typography>
           </Box>
@@ -89,15 +90,18 @@ export default function Landing() {
             <Typography component="a" href="#pricing" sx={{ color: '#475569', textDecoration: 'none', fontWeight: 600 }}>Pricing</Typography>
             <Typography component="a" href="#faq" sx={{ color: '#475569', textDecoration: 'none', fontWeight: 600 }}>FAQ</Typography>
           </Stack>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1.5 } }}>
             <Button
               component={Link}
               to="/login"
               variant="text"
+              size="small"
               sx={{
                 color: '#1F2937',
                 fontWeight: 700,
                 borderRadius: 2,
+                minWidth: 0,
+                px: { xs: 1, sm: 2 },
                 '&:hover': { bgcolor: 'transparent', color: ACCENT_BLUE },
               }}
             >
@@ -107,10 +111,12 @@ export default function Landing() {
               component={Link}
               to="/register"
               variant="contained"
+              size="small"
               sx={{
                 bgcolor: ACCENT_BLUE,
                 color: 'white',
                 borderRadius: 2,
+                px: { xs: 1.5, sm: 2 },
                 '&:hover': { bgcolor: '#2563EB' },
               }}
             >
@@ -136,17 +142,19 @@ export default function Landing() {
                   py: 0.7,
                   borderRadius: 999,
                   fontWeight: 700,
-                  fontSize: 13,
+                  fontSize: { xs: 11, sm: 13 },
                   mb: 3,
+                  maxWidth: '100%',
+                  flexWrap: 'wrap',
                 }}
               >
-                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: ACCENT_BLUE }} />
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: ACCENT_BLUE, flexShrink: 0 }} />
                 New: Telegram Bot Integration 2.0
               </Box>
-              <Typography sx={{ fontSize: { xs: 42, md: 66 }, fontWeight: 800, lineHeight: 1.05, color: '#0F172A' }}>
+              <Typography sx={{ fontSize: { xs: 30, sm: 42, md: 66 }, fontWeight: 800, lineHeight: 1.05, color: '#0F172A' }}>
                 Master Your Money
               </Typography>
-              <Typography sx={{ fontSize: { xs: 42, md: 66 }, fontWeight: 800, lineHeight: 1.05, color: ACCENT_BLUE, textDecoration: 'underline', textDecorationColor: '#BFDBFE' }}>
+              <Typography sx={{ fontSize: { xs: 30, sm: 42, md: 66 }, fontWeight: 800, lineHeight: 1.05, color: ACCENT_BLUE, textDecoration: 'underline', textDecorationColor: '#BFDBFE' }}>
                 with Telegram
               </Typography>
               <Typography sx={{ mt: 3, maxWidth: 630, color: '#64748B', fontSize: 30/2, lineHeight: 1.65 }}>
@@ -160,7 +168,7 @@ export default function Landing() {
                   startIcon={<SendIcon />}
                   sx={{
                     bgcolor: ACCENT_BLUE,
-                    px: 4,
+                    px: { xs: 3, sm: 4 },
                     py: 1.6,
                     borderRadius: 3,
                     fontWeight: 700,
@@ -176,7 +184,7 @@ export default function Landing() {
                     borderColor: '#CBD5E1',
                     color: '#334155',
                     bgcolor: '#FFFFFF',
-                    px: 4,
+                    px: { xs: 3, sm: 4 },
                     py: 1.6,
                     borderRadius: 3,
                     fontWeight: 700,
@@ -197,7 +205,7 @@ export default function Landing() {
             </Grid>
 
             <Grid item xs={12} lg={5}>
-              <Box sx={{ position: 'relative' }}>
+              <Box sx={{ position: 'relative', overflow: 'hidden' }}>
                 <Box sx={{ position: 'absolute', inset: -24, borderRadius: 8, background: 'radial-gradient(circle at 70% 70%, rgba(16,185,129,0.25), transparent 40%), radial-gradient(circle at 30% 20%, rgba(59,130,246,0.25), transparent 45%)', filter: 'blur(20px)' }} />
                 <Box sx={{ position: 'relative', bgcolor: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: 4, boxShadow: '0 30px 80px rgba(15, 23, 42, 0.18)', p: 3 }}>
                   <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
