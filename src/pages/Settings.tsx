@@ -279,7 +279,7 @@ export default function Settings() {
       {/* Section 1: Income Category */}
       <Card sx={{ mt: 3 }}>
         <CardContent>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+          <Box display="flex" flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={1} mb={3}>
             <Typography variant="h6">Income Category</Typography>
             <Button
               variant="contained"
@@ -303,7 +303,7 @@ export default function Settings() {
       {/* Section 2: Expense Category */}
       <Card sx={{ mt: 3 }}>
         <CardContent>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+          <Box display="flex" flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={1} mb={3}>
             <Typography variant="h6">Expense Category</Typography>
             <Button
               variant="contained"
@@ -327,7 +327,14 @@ export default function Settings() {
       {/* Section 3: Expense Sub Category (global switch) */}
       <Card sx={{ mt: 3 }}>
         <CardContent>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Box
+            display="flex"
+            flexDirection={{ xs: 'column', sm: 'row' }}
+            justifyContent="space-between"
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+            gap={1}
+            mb={2}
+          >
             <Typography variant="h6">Expense Sub Category</Typography>
             <FormControlLabel
               control={

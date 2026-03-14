@@ -42,7 +42,7 @@ const featureCards = [
 
 export default function Landing() {
   return (
-    <Box sx={{ bgcolor: '#F6F7F8', minHeight: '100vh', color: '#0F172A' }}>
+    <Box sx={{ bgcolor: '#F6F7F8', minHeight: '100vh', color: '#0F172A', overflowX: 'hidden' }}>
       <Box
         sx={{
           position: 'fixed',
@@ -80,7 +80,7 @@ export default function Landing() {
             >
               <AccountBalanceWalletIcon sx={{ fontSize: 26 }} />
             </Box>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: '#111827' }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: '#111827', display: { xs: 'none', sm: 'block' } }}>
               Finance Tracker
             </Typography>
           </Box>
@@ -89,7 +89,7 @@ export default function Landing() {
             <Typography component="a" href="#pricing" sx={{ color: '#475569', textDecoration: 'none', fontWeight: 600 }}>Pricing</Typography>
             <Typography component="a" href="#faq" sx={{ color: '#475569', textDecoration: 'none', fontWeight: 600 }}>FAQ</Typography>
           </Stack>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1.5 } }}>
             <Button
               component={Link}
               to="/login"
@@ -98,6 +98,7 @@ export default function Landing() {
                 color: '#1F2937',
                 fontWeight: 700,
                 borderRadius: 2,
+                px: { xs: 1, sm: 2 },
                 '&:hover': { bgcolor: 'transparent', color: ACCENT_BLUE },
               }}
             >
@@ -111,6 +112,7 @@ export default function Landing() {
                 bgcolor: ACCENT_BLUE,
                 color: 'white',
                 borderRadius: 2,
+                px: { xs: 1.5, sm: 2 },
                 '&:hover': { bgcolor: '#2563EB' },
               }}
             >
@@ -122,7 +124,7 @@ export default function Landing() {
 
       <Box sx={{ pt: 10 }}>
         <Container maxWidth="lg" sx={{ py: { xs: 6, md: 10 } }}>
-          <Grid container spacing={6} alignItems="center">
+          <Grid container spacing={{ xs: 3, md: 6 }} alignItems="center">
             <Grid item xs={12} lg={7}>
               <Box
                 sx={{
@@ -143,13 +145,13 @@ export default function Landing() {
                 <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: ACCENT_BLUE }} />
                 New: Telegram Bot Integration 2.0
               </Box>
-              <Typography sx={{ fontSize: { xs: 42, md: 66 }, fontWeight: 800, lineHeight: 1.05, color: '#0F172A' }}>
+              <Typography sx={{ fontSize: { xs: 36, md: 66 }, fontWeight: 800, lineHeight: 1.05, color: '#0F172A' }}>
                 Master Your Money
               </Typography>
-              <Typography sx={{ fontSize: { xs: 42, md: 66 }, fontWeight: 800, lineHeight: 1.05, color: ACCENT_BLUE, textDecoration: 'underline', textDecorationColor: '#BFDBFE' }}>
+              <Typography sx={{ fontSize: { xs: 36, md: 66 }, fontWeight: 800, lineHeight: 1.05, color: ACCENT_BLUE, textDecoration: 'underline', textDecorationColor: '#BFDBFE' }}>
                 with Telegram
               </Typography>
-              <Typography sx={{ mt: 3, maxWidth: 630, color: '#64748B', fontSize: 30/2, lineHeight: 1.65 }}>
+              <Typography sx={{ mt: 3, maxWidth: 630, color: '#64748B', fontSize: { xs: 16, md: 30/2 }, lineHeight: 1.65 }}>
                 The smartest personal finance tracker that lives where you chat. Track expenses, visualize growth, and stay secure without leaving your favorite app.
               </Typography>
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 4 }}>

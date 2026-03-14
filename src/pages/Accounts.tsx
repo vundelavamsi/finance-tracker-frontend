@@ -131,7 +131,7 @@ export default function Accounts() {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+      <Box display="flex" flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={2} mb={3}>
         <Box>
           <Typography variant="h4" fontWeight={700}>Bank Accounts</Typography>
           <Typography variant="body2" color="text.secondary">Manage your accounts and balances</Typography>

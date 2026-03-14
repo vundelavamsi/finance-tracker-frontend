@@ -135,7 +135,7 @@ export default function UserProfile() {
         Manage your account and sign-in options
       </Typography>
 
-      <Card sx={{ mt: 3, maxWidth: 600 }}>
+      <Card sx={{ mt: 3, maxWidth: 600, width: '100%' }}>
         <CardContent>
           <Typography variant="subtitle2" color="text.secondary">
             Account info
@@ -153,7 +153,7 @@ export default function UserProfile() {
 
       {/* Set email & password (for Telegram-first users) */}
       {!user.has_password && (
-        <Card sx={{ mt: 3, maxWidth: 600 }}>
+        <Card sx={{ mt: 3, maxWidth: 600, width: '100%' }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
               Set email & password
@@ -205,7 +205,13 @@ export default function UserProfile() {
                 margin="dense"
                 required
               />
-              <Button type="submit" variant="contained" sx={{ mt: 2 }} disabled={setPasswordLoading}>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                sx={{ mt: 2 }}
+                disabled={setPasswordLoading}
+              >
                 {setPasswordLoading ? <CircularProgress size={24} /> : 'Set email & password'}
               </Button>
             </Box>
@@ -215,7 +221,7 @@ export default function UserProfile() {
 
       {/* Connect Telegram (for web-first users) */}
       {!telegramLinked && (
-        <Card sx={{ mt: 3, maxWidth: 600 }}>
+        <Card sx={{ mt: 3, maxWidth: 600, width: '100%' }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
               Connect Telegram
