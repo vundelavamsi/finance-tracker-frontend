@@ -72,7 +72,7 @@ function SummaryCard({
 }) {
   return (
     <Card sx={{ bgcolor: '#FFFFFF', borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-      <CardContent sx={{ p: 3 }}>
+      <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
         <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
           <Box
             sx={{
@@ -106,7 +106,7 @@ function SummaryCard({
         <Typography variant="body2" sx={{ color: '#64748B', fontWeight: 500, fontSize: '0.875rem' }}>
           {title}
         </Typography>
-        <Typography variant="h5" fontWeight={700} sx={{ mt: 1, color: '#0F172A', fontSize: '1.75rem' }}>
+        <Typography variant="h5" fontWeight={700} sx={{ mt: 1, color: '#0F172A', fontSize: { xs: '1.375rem', sm: '1.75rem' } }}>
           {value}
         </Typography>
       </CardContent>
@@ -193,17 +193,17 @@ export default function Dashboard() {
         }}
       >
         <Box>
-          <Typography variant="h4" fontWeight={700} sx={{ color: '#0F172A', fontSize: '1.875rem' }} gutterBottom>
+          <Typography variant="h4" fontWeight={700} sx={{ color: '#0F172A', fontSize: { xs: '1.375rem', sm: '1.875rem' } }} gutterBottom>
             Dashboard Overview
           </Typography>
-          <Typography variant="body1" sx={{ color: '#64748B', fontSize: '0.95rem' }}>
+          <Typography variant="body1" sx={{ color: '#64748B', fontSize: { xs: '0.875rem', sm: '0.95rem' } }}>
             Welcome back, {displayName}. Here&apos;s what&apos;s happening with your money today.
           </Typography>
         </Box>
       </Box>
 
       {/* Summary cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: 4 }}>
         <Grid item xs={12} sm={6} md={3}>
           <SummaryCard
             title="Monthly Income"
@@ -258,10 +258,10 @@ export default function Dashboard() {
       </Grid>
 
       {/* Charts */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid container spacing={{ xs: 2, sm: 3 }} sx={{ mb: 4 }}>
         <Grid item xs={12} lg={7}>
           <Card sx={{ bgcolor: '#FFFFFF', borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-            <CardContent sx={{ p: 3 }}>
+            <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
               <Typography variant="h6" fontWeight={700} sx={{ color: '#0F172A', fontSize: '1.125rem' }} gutterBottom>
                 Cashflow Performance
               </Typography>
@@ -269,10 +269,14 @@ export default function Dashboard() {
                 Income vs. Expenses (Last 6 Months)
               </Typography>
               <ResponsiveContainer width="100%" height={280}>
-                <LineChart data={cashflowData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                <LineChart data={cashflowData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                   <XAxis dataKey="month" tick={{ fill: '#64748B', fontSize: 12 }} />
-                  <YAxis tick={{ fill: '#64748B', fontSize: 12 }} />
+                  <YAxis
+                    tick={{ fill: '#64748B', fontSize: 12 }}
+                    width={60}
+                    tickFormatter={(v: number) => (v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v))}
+                  />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: '#FFFFFF',
@@ -308,7 +312,7 @@ export default function Dashboard() {
         </Grid>
         <Grid item xs={12} lg={5}>
           <Card sx={{ bgcolor: '#FFFFFF', borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-            <CardContent sx={{ p: 3 }}>
+            <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
               <Typography variant="h6" fontWeight={700} sx={{ color: '#0F172A', fontSize: '1.125rem' }} gutterBottom>
                 Expense Breakdown
               </Typography>
@@ -318,7 +322,7 @@ export default function Dashboard() {
               <Typography variant="h6" fontWeight={700} sx={{ mb: 2, color: '#0F172A', fontSize: '1.25rem' }}>
                 {formatCurrency(totalExpense, 'INR')} TOTAL
               </Typography>
-              <ResponsiveContainer width="100%" height={220}>
+              <ResponsiveContainer width="100%" height={240}>
                 <PieChart>
                   <Pie
                     data={stats.category_breakdown}
@@ -329,13 +333,15 @@ export default function Dashboard() {
                     paddingAngle={2}
                     dataKey="amount"
                     nameKey="name"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                    labelLine={false}
                   >
                     {stats.category_breakdown.map((entry, index) => (
                       <Cell key={entry.name} fill={entry.color || CHART_COLORS[index % CHART_COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip formatter={(value: number) => formatCurrency(value, 'INR')} />
+                  <Legend wrapperStyle={{ fontSize: '0.75rem', color: '#64748B' }} />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>
@@ -344,10 +350,10 @@ export default function Dashboard() {
       </Grid>
 
       {/* Balances by Account & Recent Transactions */}
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 2, sm: 3 }}>
         <Grid item xs={12} md={4}>
           <Card sx={{ bgcolor: '#FFFFFF', borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-            <CardContent sx={{ p: 3 }}>
+            <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                 <Typography variant="h6" fontWeight={700} sx={{ color: '#0F172A', fontSize: '1.125rem' }}>
                   Balances by Account
@@ -398,7 +404,7 @@ export default function Dashboard() {
         </Grid>
         <Grid item xs={12} md={8}>
           <Card sx={{ bgcolor: '#FFFFFF', borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-            <CardContent sx={{ p: 3 }}>
+            <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                 <Typography variant="h6" fontWeight={700} sx={{ color: '#0F172A', fontSize: '1.125rem' }}>
                   Recent Transactions
@@ -411,7 +417,7 @@ export default function Dashboard() {
                 <Typography sx={{ color: '#64748B' }}>No recent transactions</Typography>
               ) : (
                 <TableContainer sx={{ overflowX: 'auto' }}>
-                  <Table size="small" sx={{ minWidth: 400 }}>
+                  <Table size="small" sx={{ minWidth: 450 }}>
                     <TableHead>
                       <TableRow>
                         <TableCell sx={{ color: '#64748B', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '2px solid #E2E8F0' }}>TRANSACTION</TableCell>

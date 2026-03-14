@@ -140,7 +140,7 @@ export default function Login() {
         }}
       >
         {/* Header */}
-        <Box sx={{ pt: { xs: 3, sm: 5 }, pb: 1, px: { xs: 2, sm: 4 }, textAlign: 'center' }}>
+        <Box sx={{ pt: 5, pb: 1, px: { xs: 3, sm: 4 }, textAlign: 'center' }}>
           <Box
             sx={{
               width: 48,
@@ -173,7 +173,7 @@ export default function Login() {
         </Box>
 
         {/* Tab Switcher */}
-        <Box sx={{ px: { xs: 2, sm: 4 }, mt: 3 }}>
+        <Box sx={{ px: { xs: 3, sm: 4 }, mt: 3 }}>
           <Box
             sx={{
               display: 'flex',
@@ -226,7 +226,7 @@ export default function Login() {
         </Box>
 
         {/* Content */}
-        <CardContent sx={{ px: { xs: 2, sm: 4 }, py: 3 }}>
+        <CardContent sx={{ px: { xs: 3, sm: 4 }, py: 3 }}>
           {message && (
             <Alert severity={message.type} sx={{ mb: 2 }} onClose={() => setMessage(null)}>
               {message.text}

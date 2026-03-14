@@ -205,7 +205,7 @@ export default function UserProfile() {
                 margin="dense"
                 required
               />
-              <Button type="submit" variant="contained" sx={{ mt: 2 }} disabled={setPasswordLoading}>
+              <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }} disabled={setPasswordLoading}>
                 {setPasswordLoading ? <CircularProgress size={24} /> : 'Set email & password'}
               </Button>
             </Box>

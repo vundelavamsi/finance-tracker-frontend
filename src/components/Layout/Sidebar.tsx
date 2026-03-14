@@ -10,8 +10,6 @@ import {
   Typography,
   Avatar,
   Tooltip,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import ReceiptIcon from '@mui/icons-material/Receipt'
@@ -35,15 +33,13 @@ const mainMenuItems = [
 
 interface SidebarProps {
   mobileOpen: boolean
-  onMobileClose: () => void
+  onClose: () => void
 }
 
-export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
+export default function Sidebar({ mobileOpen, onClose }: SidebarProps) {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuth()
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
   const renderItem = (item: { text: string; icon: React.ElementType; path: string }) => {
     const isActive = location.pathname === item.path
@@ -54,7 +50,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           component={Link}
           to={item.path}
           selected={isActive}
-          onClick={isMobile ? onMobileClose : undefined}
+          onClick={onClose}
           sx={{
             color: isActive ? ACCENT_BLUE : '#475569',
             borderRadius: 2,
@@ -131,7 +127,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         {/* User info — clickable, navigates to profile */}
         <Tooltip title="View profile" placement="top" arrow>
           <Box
-            onClick={() => { navigate('/app/profile'); if (isMobile) onMobileClose() }}
+            onClick={() => { navigate('/app/profile'); onClose() }}
             sx={{
               flex: 1,
               display: 'flex',
@@ -220,15 +216,15 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   )
 
   return (
-    <>
-      {/* Mobile temporary drawer */}
+    <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
+      {/* Mobile: temporary drawer */}
       <Drawer
         variant="temporary"
         open={mobileOpen}
-        onClose={onMobileClose}
+        onClose={onClose}
         ModalProps={{ keepMounted: true }}
         sx={{
-          display: { xs: 'block', md: 'none' },
+          display: { xs: 'block', sm: 'none' },
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
@@ -240,17 +236,15 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         {drawerContent}
       </Drawer>
 
-      {/* Desktop permanent drawer */}
+      {/* Desktop: permanent drawer */}
       <Drawer
         variant="permanent"
+        open
         sx={{
-          display: { xs: 'none', md: 'block' },
-          width: drawerWidth,
-          flexShrink: 0,
+          display: { xs: 'none', sm: 'block' },
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
-            marginTop: 0,
             top: 0,
             height: '100vh',
             backgroundColor: '#FFFFFF',
@@ -260,6 +254,6 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
       >
         {drawerContent}
       </Drawer>
-    </>
+    </Box>
   )
 }

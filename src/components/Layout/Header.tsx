@@ -4,8 +4,6 @@ import {
   Button,
   IconButton,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -22,14 +20,13 @@ const PAGE_TITLES: Record<string, string> = {
 }
 
 interface HeaderProps {
-  onMobileMenuToggle: () => void
+  onMobileMenuOpen: () => void
 }
 
-export default function Header({ onMobileMenuToggle }: HeaderProps) {
+export default function Header({ onMobileMenuOpen }: HeaderProps) {
   const location = useLocation()
   const pageTitle = PAGE_TITLES[location.pathname] || 'Dashboard'
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const isTransactions = location.pathname === '/app/transactions'
 
   return (
     <Box
@@ -38,7 +35,7 @@ export default function Header({ onMobileMenuToggle }: HeaderProps) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        px: { xs: 2, sm: 3, md: 4 },
+        px: { xs: 2, sm: 4 },
         height: 64,
         borderBottom: '1px solid #E2E8F0',
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -46,55 +43,47 @@ export default function Header({ onMobileMenuToggle }: HeaderProps) {
         flexShrink: 0,
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
-        {isMobile && (
-          <IconButton
-            aria-label="open navigation menu"
-            edge="start"
-            onClick={onMobileMenuToggle}
-            sx={{ color: '#475569', mr: 0.5 }}
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <IconButton
+          aria-label="open navigation menu"
+          edge="start"
+          onClick={onMobileMenuOpen}
+          sx={{ display: { sm: 'none' }, color: '#0F172A' }}
+        >
+          <MenuIcon />
+        </IconButton>
         <Typography
           variant="h6"
-          sx={{
-            fontWeight: 700,
-            color: '#0F172A',
-            fontSize: { xs: 15, sm: 18 },
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
+          sx={{ fontWeight: 700, color: '#0F172A', fontSize: { xs: 15, sm: 18 } }}
         >
           {pageTitle}
         </Typography>
       </Box>
 
-      <Button
-        component={Link}
-        to="/app/transactions"
-        variant="contained"
-        startIcon={<AddIcon sx={{ fontSize: 18 }} />}
-        sx={{
-          bgcolor: ACCENT_BLUE,
-          color: 'white',
-          px: { xs: 1.5, sm: 2 },
-          py: 1,
-          borderRadius: 2,
-          fontSize: { xs: '0.8rem', sm: '0.875rem' },
-          fontWeight: 700,
-          textTransform: 'none',
-          boxShadow: '0 8px 16px rgba(19, 127, 236, 0.2)',
-          whiteSpace: 'nowrap',
-          '&:hover': {
-            bgcolor: '#2563EB',
-          },
-        }}
-      >
-        {isMobile ? 'Add' : 'Quick Add'}
-      </Button>
+      {!isTransactions && (
+        <Button
+          component={Link}
+          to="/app/transactions"
+          variant="contained"
+          startIcon={<AddIcon sx={{ fontSize: 18 }} />}
+          sx={{
+            bgcolor: ACCENT_BLUE,
+            color: 'white',
+            px: 2,
+            py: 1,
+            borderRadius: 2,
+            fontSize: '0.875rem',
+            fontWeight: 700,
+            textTransform: 'none',
+            boxShadow: '0 8px 16px rgba(19, 127, 236, 0.2)',
+            '&:hover': {
+              bgcolor: '#2563EB',
+            },
+          }}
+        >
+          Quick Add
+        </Button>
+      )}
     </Box>
   )
 }

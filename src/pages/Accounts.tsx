@@ -131,9 +131,9 @@ export default function Accounts() {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3} flexWrap="wrap" gap={1}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap" gap={1.5} mb={3}>
         <Box>
-          <Typography variant="h4" fontWeight={700} sx={{ fontSize: { xs: '1.5rem', sm: '2.125rem' } }}>Bank Accounts</Typography>
+          <Typography variant="h4" fontWeight={700}>Bank Accounts</Typography>
           <Typography variant="body2" color="text.secondary">Manage your accounts and balances</Typography>
         </Box>
         <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()}>

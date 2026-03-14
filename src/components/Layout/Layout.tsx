@@ -7,12 +7,9 @@ import Sidebar from './Sidebar'
 export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  const handleMobileToggle = () => setMobileOpen((prev) => !prev)
-  const handleMobileClose = () => setMobileOpen(false)
-
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
-      <Sidebar mobileOpen={mobileOpen} onMobileClose={handleMobileClose} />
+      <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
       <Box
         sx={{
           flexGrow: 1,
@@ -22,7 +19,7 @@ export default function Layout() {
           backgroundColor: 'background.default',
         }}
       >
-        <Header onMobileMenuToggle={handleMobileToggle} />
+        <Header onMobileMenuOpen={() => setMobileOpen(true)} />
         <Box
           component="main"
           sx={{
