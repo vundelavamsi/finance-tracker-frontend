@@ -1,5 +1,5 @@
 import api from './api'
-import { Category, CategoryCreate, CategoryUpdate, CategoryType } from '../types/category'
+import { Category, CategoryCreate, CategoryReorderPayload, CategoryUpdate, CategoryType } from '../types/category'
 
 export interface GetCategoriesParams {
   type?: CategoryType
@@ -28,4 +28,9 @@ export const updateCategory = async (id: number, data: CategoryUpdate): Promise<
 
 export const deleteCategory = async (id: number): Promise<void> => {
   await api.delete(`/categories/${id}`)
+}
+
+export const reorderCategories = async (payload: CategoryReorderPayload): Promise<Category[]> => {
+  const response = await api.put('/categories/reorder', payload)
+  return response.data
 }
