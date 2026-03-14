@@ -194,7 +194,7 @@ export default function Transactions() {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+      <Box display="flex" flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={1} mb={3}>
         <Box>
           <Typography variant="h4" fontWeight={700}>Transactions</Typography>
           <Typography variant="body2" color="text.secondary">View and manage all your transactions</Typography>
@@ -206,9 +206,9 @@ export default function Transactions() {
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-      <Card sx={{ overflow: 'hidden' }}>
-        <TableContainer component={Box}>
-        <Table>
+      <Card>
+        <TableContainer component={Box} sx={{ overflowX: 'auto' }}>
+        <Table sx={{ minWidth: 650 }}>
           <TableHead>
             <TableRow>
               <TableCell>Date</TableCell>
