@@ -21,6 +21,8 @@ import {
   Alert,
   Autocomplete,
   Divider,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -59,6 +61,9 @@ export default function Transactions() {
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   // Tracks which parent category is selected in the dialog (UI state only)
   const [selectedParentId, setSelectedParentId] = useState<number | null>(null)
+
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const { register, handleSubmit, reset, control, setValue, watch, formState: { errors } } = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
@@ -194,7 +199,14 @@ export default function Transactions() {
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems={{ xs: 'flex-start', sm: 'center' }}
+        flexWrap="wrap"
+        gap={2}
+        mb={3}
+      >
         <Box>
           <Typography variant="h4" fontWeight={700}>Transactions</Typography>
           <Typography variant="body2" color="text.secondary">View and manage all your transactions</Typography>
@@ -207,61 +219,72 @@ export default function Transactions() {
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
       <Card sx={{ overflow: 'hidden' }}>
-        <TableContainer component={Box}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Merchant</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Account</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {transactions.map((txn) => (
-              <TableRow key={txn.id}>
-                <TableCell>{formatDate(txn.created_at)}</TableCell>
-                <TableCell>{formatCurrency(parseFloat(txn.amount), txn.currency)}</TableCell>
-                <TableCell>{txn.merchant || 'N/A'}</TableCell>
-                <TableCell>
-                  <Box
-                    component="span"
-                    sx={{
-                      px: 1,
-                      py: 0.5,
-                      borderRadius: 1,
-                      bgcolor: txn.category?.color || '#f0f0f0',
-                      color: 'white',
-                      fontSize: '0.875rem',
-                    }}
-                  >
-                    {txn.category?.name || 'Uncategorized'}
-                  </Box>
-                </TableCell>
-                <TableCell>{txn.account?.name || 'N/A'}</TableCell>
-                <TableCell>{txn.status}</TableCell>
-                <TableCell>
-                  <IconButton size="small" onClick={() => handleOpenDialog(txn)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton size="small" onClick={() => handleDelete(txn.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
+        <TableContainer component={Box} sx={{ overflowX: 'auto' }}>
+          <Table sx={{ minWidth: 600 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>Date</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>Amount</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>Merchant</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>Category</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>Account</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>Status</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {transactions.map((txn) => (
+                <TableRow key={txn.id}>
+                  <TableCell sx={{ whiteSpace: 'nowrap' }}>{formatDate(txn.created_at)}</TableCell>
+                  <TableCell sx={{ whiteSpace: 'nowrap' }}>{formatCurrency(parseFloat(txn.amount), txn.currency)}</TableCell>
+                  <TableCell>{txn.merchant || 'N/A'}</TableCell>
+                  <TableCell>
+                    <Box
+                      component="span"
+                      sx={{
+                        px: 1,
+                        py: 0.5,
+                        borderRadius: 1,
+                        bgcolor: txn.category?.color || '#f0f0f0',
+                        color: 'white',
+                        fontSize: '0.875rem',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {txn.category?.name || 'Uncategorized'}
+                    </Box>
+                  </TableCell>
+                  <TableCell sx={{ whiteSpace: 'nowrap' }}>{txn.account?.name || 'N/A'}</TableCell>
+                  <TableCell sx={{ whiteSpace: 'nowrap' }}>{txn.status}</TableCell>
+                  <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleOpenDialog(txn)}
+                      aria-label="edit transaction"
+                      sx={{ p: { xs: 1.25, sm: 0.5 } }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleDelete(txn.id)}
+                      aria-label="delete transaction"
+                      sx={{ p: { xs: 1.25, sm: 0.5 } }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Card>
 
-      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth fullScreen={isMobile}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogTitle>{editingTransaction ? 'Edit Transaction' : 'Add Transaction'}</DialogTitle>
-          <DialogContent>
+          <DialogContent sx={{ px: { xs: 2, sm: 3 } }}>
 
             {/* Transaction Type Toggle */}
             <Box sx={{ display: 'flex', gap: 1, mb: 2, mt: 1 }}>
