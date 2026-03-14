@@ -325,28 +325,37 @@ export default function Settings() {
         bgcolor: 'background.paper',
       }}
     >
-      <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
-        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ minWidth: 0, flex: 1 }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={1}
+        alignItems={{ xs: 'flex-start', sm: 'center' }}
+        justifyContent="space-between"
+      >
+        <Stack direction="row" spacing={1.25} alignItems="flex-start" sx={{ minWidth: 0, flex: 1, width: '100%' }}>
           <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: category.color, flexShrink: 0 }} />
-          <Box sx={{ minWidth: 0 }}>
+          <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography variant="body2" fontWeight={700} noWrap>
               {category.name}
             </Typography>
             {category.description && (
-              <Typography variant="caption" color="text.secondary" noWrap>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  display: 'block',
+                  whiteSpace: 'normal',
+                  overflowWrap: 'anywhere',
+                  pr: { xs: 0, sm: 1 },
+                }}
+              >
                 {category.description}
               </Typography>
             )}
           </Box>
-          <Chip
-            size="small"
-            label={category.is_active ? 'Active' : 'Inactive'}
-            color={category.is_active ? 'success' : 'default'}
-            variant="outlined"
-          />
+          <Chip size="small" label={category.is_active ? 'Active' : 'Inactive'} color={category.is_active ? 'success' : 'default'} variant="outlined" />
         </Stack>
 
-        <Stack direction="row" spacing={0.5}>
+        <Stack direction="row" spacing={0.5} sx={{ alignSelf: { xs: 'flex-end', sm: 'auto' } }}>
           <IconButton size="small" onClick={options.onMoveUp} disabled={!options.canMoveUp || isReordering}>
             <KeyboardArrowUpIcon fontSize="small" />
           </IconButton>
@@ -368,8 +377,16 @@ export default function Settings() {
     <Card sx={{ mt: 3 }}>
       <CardContent>
         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="h6">{title}</Typography>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog(type === 'INCOME' ? 'income' : 'expense')}>
+          <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' }, fontWeight: 700 }}>
+            {title}
+          </Typography>
+          <Button
+            variant="contained"
+            size="small"
+            startIcon={<AddIcon fontSize="small" />}
+            sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' }, px: { xs: 1.25, sm: 1.75 } }}
+            onClick={() => handleOpenDialog(type === 'INCOME' ? 'income' : 'expense')}
+          >
             Add Category
           </Button>
         </Stack>
